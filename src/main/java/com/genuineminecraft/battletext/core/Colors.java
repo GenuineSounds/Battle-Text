@@ -35,29 +35,19 @@ public class Colors {
 	}
 
 	static {
-		//		textColors.put("cactus", 0xBEBEBE);
-		//		textColors.put("fire", 0xFF7F00);
-		//		textColors.put("fall", 0xBEBEBE);
-		//		textColors.put("drown", 0xBEBEBE);
-		//		textColors.put("healing", 0x00A550);
-		//		textColors.put("explosion", 0xFE2712);
-		//		textColors.put("magic", 0xA020F0);
-		//		textColors.put("mob", 0xFE2712);
-		//		textColors.put("starve", 0xBEBEBE);
-		//		textColors.put("arrow", 0xFE2712);
-		//		textColors.put("melee", 0xFE2712);
-		//		textColors.put("generic", 0xBEBEBE);
-		//		backgroundColors.put("cactus", 0x0);
-		//		backgroundColors.put("fire", 0x0);
-		//		backgroundColors.put("fall", 0x0);
-		//		backgroundColors.put("drown", 0x0);
-		//		backgroundColors.put("healing", 0x0);
-		//		backgroundColors.put("explosion", 0x0);
-		//		backgroundColors.put("magic", 0x0);
-		//		backgroundColors.put("mob", 0x0);
-		//		backgroundColors.put("starve", 0x0);
-		//		backgroundColors.put("arrow", 0x0);
-		//		backgroundColors.put("melee", 0x0);
-		//		backgroundColors.put("generic", 0x0);
+		textColors.put("arrow", 0xFE2712);
+		textColors.put("cactus", 0xBEBEBE);
+		textColors.put("drown", 0xBEBEBE);
+		textColors.put("explosion.player", 0xFE2712);
+		textColors.put("fall", 0xBEBEBE);
+		textColors.put("generic", 0xBEBEBE);
+		textColors.put("healing", 0x00A550);
+		textColors.put("inFire", 0xFF7F00);
+		textColors.put("lava", 0x4F0000);
+		textColors.put("magic", 0xA020F0);
+		textColors.put("onFire", 0xFF7F00);
+		textColors.put("outOfWorld", 0);
+		textColors.put("wither", 0x505050);
+		backgroundColors.put("ofOfWorld", -1);
 	}
 }

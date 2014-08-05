@@ -17,8 +17,8 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.5"
-group= "com.genuineminecraft.battletext" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "1.6"
+group = "com.genuineminecraft.battletext"
 archivesBaseName = "BattleText"
 
 minecraft {
