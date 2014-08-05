@@ -48,7 +48,7 @@ public class LoadingPlugin implements IFMLLoadingPlugin {
 			md.authorList = Arrays.asList("Genuine");
 			md.modId = "<BattleText ASM>";
 			md.name = md.description = "BattleText HealingCore";
-			md.version = "000";
+			md.version = "1";
 		}
 
 		@Override
