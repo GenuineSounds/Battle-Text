@@ -11,7 +11,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import com.genuineminecraft.battletext.core.Text;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -35,11 +34,10 @@ public class Events {
 					name = src.getCommandSenderName();
 			}
 			StringBuilder message = new StringBuilder();
-			message.append("Damage: -");
+			message.append("Damage: ");
 			message.append(ChatFormatting.DARK_RED);
+			message.append("-");
 			message.append((int) event.ammount);
-			message.append(" ");
-			message.append(event.source.getDamageType());
 			message.append(" ");
 			message.append(ChatFormatting.RESET);
 			message.append("from ");
