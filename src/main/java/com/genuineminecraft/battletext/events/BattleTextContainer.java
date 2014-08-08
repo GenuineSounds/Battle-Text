@@ -79,7 +79,7 @@ public class BattleTextContainer {
 			int color2 = txt.backgroundColor | (alpha << 24);
 			int offX = -fr.getStringWidth(txt.display);
 			int offY = -4;
-			double scale = 0.015;
+			double scale = 0.025;
 			glScaled(scale, -scale, scale);
 			glEnable(GL_BLEND);
 //			fr.drawString(txt.display, offX + 1, offY + 1, color2);
