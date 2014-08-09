@@ -1,94 +1,93 @@
 package com.genuineminecraft.battletext.core;
 
+import java.util.Random;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
 public class Text {
 
-	public static int LIFETIME = 40;
-	public static double gravity = 1;
+	public static final double GRAVITY = 1;
+
 	public String display;
-	public float damage;
+	public final float amount;
 	public int textColor;
 	public int backgroundColor;
-	protected int lifespan;
-	public double prevPosX;
-	public double prevPosY;
-	public double prevPosZ;
+	protected int ticks;
+	protected int lifetime = 40;
 	public double posX;
 	public double posY;
 	public double posZ;
+	public double prevPosX;
+	public double prevPosY;
+	public double prevPosZ;
 	private double motionX;
 	private double motionY;
 	private double motionZ;
 
-	public Text(EntityLivingBase entity, DamageSource damagesource, float amount) {
+	public Text(EntityLivingBase entity, DamageSource damageSource, float damage) {
 		setupPos(entity);
-		constructDamage(damagesource, amount);
-		damage = amount;
+		String name = damageSource.getDamageType();
+		setAmount("-", damage, name, false);
+		this.amount = damage;
 	}
 
 	public Text(EntityLivingBase entity, float healing) {
 		setupPos(entity);
-		setDamage("+", healing, "heal", false);
+		setAmount("+", healing, "heal", false);
+		amount = healing;
 	}
 
-	public void constructDamage(DamageSource ds, float damage) {
-		String name = ds.getDamageType();
-		setDamage("", damage, name, false);
-	}
-
-	public void setDamage(String prefix, float damage, String name, boolean flag) {
+	public void setAmount(String prefix, float amount, String name, boolean flag) {
 		textColor = Colors.getTextColor(name) & 0xFFFFFF;
 		backgroundColor = Colors.getBackgroundColor(name) & 0xFFFFFF;
-		if (flag) {
-			display = prefix + (int) damage + " (" + name + ")";
-		} else {
-			display = prefix + (int) damage;
-		}
+		if (flag)
+			display = prefix + (int) amount + " (" + name + ")";
+		else
+			display = prefix + (int) amount;
 	}
 
 	private void setupPos(EntityLivingBase entity) {
-		lifespan = LIFETIME;
+		ticks = lifetime;
 		posX = entity.posX;
 		posY = entity.posY;
 		posZ = entity.posZ;
 		prevPosX = entity.prevPosX;
 		prevPosY = entity.prevPosY;
 		prevPosZ = entity.prevPosZ;
-		motionX = Math.random() * 0.2 - 0.1;
-		motionZ = Math.random() * 0.2 - 0.1;
+		motionX = new Random().nextGaussian() / 24;
+		motionZ = new Random().nextGaussian() / 24;
 	}
 
 	public boolean onUpdate() {
-		if (lifespan-- <= 0)
+		if (ticks-- <= 0)
 			return false;
 		move();
 		return true;
 	}
 
 	public void move() {
-		motionX *= 0.98;
-		motionY -= gravity * 0.01;
-		motionZ *= 0.98;
 		prevPosX = posX;
 		prevPosY = posY;
 		prevPosZ = posZ;
+		motionX *= 0.95;
+		motionY -= GRAVITY * 0.01;
+		motionZ *= 0.95;
 		posX += motionX;
 		posY += motionY;
 		posZ += motionZ;
 	}
 
 	public double getPercent() {
-		return (double) this.lifespan / (double) this.LIFETIME;
+		return (double) this.ticks / (double) this.lifetime;
 	}
 
 	public double getPreviousPercent() {
-		return (double) (this.lifespan + 1) / (double) this.LIFETIME;
+		return (double) (this.ticks + 1) / (double) this.lifetime;
 	}
 
-	public double getPercent(double delta) {
+	public double getInterpPercent(double delta) {
 		return this.getPreviousPercent() + ((this.getPercent() - this.getPreviousPercent()) * delta);
 	}
 

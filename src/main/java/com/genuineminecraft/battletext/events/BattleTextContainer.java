@@ -34,16 +34,18 @@ public class BattleTextContainer {
 		return instance;
 	}
 
-	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 	public long time = 0L;
+	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
 	public synchronized void addText(Text txt) {
-		if (txt.damage > 0)
+		if (txt.amount >= 0)
 			this.textList.add(txt);
 	}
 
 	public synchronized void tick(float deltaTime) {
-		long tick = Minecraft.getMinecraft().theWorld.getWorldTime();
+		if (RenderManager.instance == null || RenderManager.instance.worldObj == null)
+			return;
+		long tick = RenderManager.instance.worldObj.getTotalWorldTime();
 		if (this.time != tick) {
 			List<Text> removalQueue = new ArrayList<Text>();
 			for (Text caption : textList)
@@ -64,7 +66,7 @@ public class BattleTextContainer {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		for (Text txt : textList) {
-			if (txt.getDistanceToEntity(Minecraft.getMinecraft().thePlayer) > 16)
+			if (txt.getDistanceToEntity(Minecraft.getMinecraft().thePlayer) > 32)
 				continue;
 			double x = RenderManager.instance.viewerPosX - (txt.prevPosX + ((txt.posX - txt.prevPosX) * delta));
 			double y = RenderManager.instance.viewerPosY - (txt.prevPosY + ((txt.posY - txt.prevPosY) * delta)) - 2;
@@ -72,7 +74,7 @@ public class BattleTextContainer {
 			glTranslated(-x, -y, -z);
 			glRotatef(-RenderManager.instance.playerViewY + 180, 0.0F, 1.0F, 0.0F);
 			glRotatef(-RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
-			int alpha = (int) (txt.getPercent(delta) * 0xFF) & 0xFF;
+			int alpha = (int) (txt.getInterpPercent(delta) * 0xFF) & 0xFF;
 			if (alpha < 28)
 				alpha = 28;
 			int color1 = txt.textColor | (alpha << 24);
@@ -82,14 +84,10 @@ public class BattleTextContainer {
 			double scale = 0.025;
 			glScaled(scale, -scale, scale);
 			glEnable(GL_BLEND);
-//			fr.drawString(txt.display, offX + 1, offY + 1, color2);
 			fr.drawString(txt.display, offX + 1, offY, color2);
-//			fr.drawString(txt.display, offX + 1, offY - 1, color2);
 			fr.drawString(txt.display, offX, offY + 1, color2);
 			fr.drawString(txt.display, offX, offY - 1, color2);
-//			fr.drawString(txt.display, offX - 1, offY + 1, color2);
 			fr.drawString(txt.display, offX - 1, offY, color2);
-//			fr.drawString(txt.display, offX - 1, offY - 1, color2);
 			fr.drawString(txt.display, offX, offY, color1);
 			glScaled(1 / scale, -1 / scale, 1 / scale);
 			glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
