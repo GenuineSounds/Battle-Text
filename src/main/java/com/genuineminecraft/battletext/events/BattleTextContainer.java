@@ -37,6 +37,9 @@ public class BattleTextContainer {
 	public long time = 0L;
 	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
+	public BattleTextContainer() {
+	}
+
 	public synchronized void addText(Text txt) {
 		if (txt.amount >= 0)
 			this.textList.add(txt);
@@ -74,22 +77,26 @@ public class BattleTextContainer {
 			glTranslated(-x, -y, -z);
 			glRotatef(-RenderManager.instance.playerViewY + 180, 0.0F, 1.0F, 0.0F);
 			glRotatef(-RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
-			int alpha = (int) (txt.getInterpPercent(delta) * 0xFF) & 0xFF;
-			if (alpha < 28)
-				alpha = 28;
-			int color1 = txt.textColor | (alpha << 24);
-			int color2 = txt.backgroundColor | (alpha << 24);
+			int alpha1 = (int) (txt.getInterpPercent(delta) * 0xFF) & 0xFF;
+			int alpha2 = (int) (txt.getInterpPercent(delta) * 0x7F) & 0xFF;
+			if (alpha1 < 28)
+				alpha1 = 28;
+			if (alpha2 < 28)
+				alpha2 = 28;
+			int color1 = txt.textColor | (alpha1 << 24);
+			int color2 = txt.backgroundColor | (alpha2 << 24);
 			int offX = -fr.getStringWidth(txt.display);
 			int offY = -4;
 			double scale = 0.025;
 			glScaled(scale, -scale, scale);
-			glEnable(GL_BLEND);
+			// Shadows
 			fr.drawString(txt.display, offX + 1, offY, color2);
 			fr.drawString(txt.display, offX, offY + 1, color2);
 			fr.drawString(txt.display, offX, offY - 1, color2);
 			fr.drawString(txt.display, offX - 1, offY, color2);
+			// Main
 			fr.drawString(txt.display, offX, offY, color1);
-			glScaled(1 / scale, -1 / scale, 1 / scale);
+			glScaled(1.0 / scale, -1.0 / scale, 1.0 / scale);
 			glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
 			glRotatef(RenderManager.instance.playerViewY - 180, 0.0F, 1.0F, 0.0F);
 			glTranslated(x, y, z);
