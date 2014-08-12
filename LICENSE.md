@@ -3,17 +3,17 @@ This computer software code ("the code") is ©2014 GenuineSounds ("the author") 
 ###Scope
 This means that you’re free to pretty much do what you like with the the code or compiled binaries, including but not limited to:
 * Download code or compiled binaries for personal use
-* Put the code or compiled binaries into your modpack
+* Put the code or compiled binaries into your "modpack"
 * Fork the repository on github
 * Compile the code
 * Modify the code to: 
   * fix bugs 
   * add features 
-  * fit better with your modpack
+  * fit better with your "modpack"
   * remove a problematic item
   * replace all item icons with cat pictures, because cats
 * Use portions of the code as examples in a presentation
-* Record portions of gameplay for display on YouTube or other video/media sites
+* Record portions of game-play for display on YouTube or other video/media sites
 
 The above usage is granted to you as long as this license remains intact for all original or derived code. Please leave a a link to, or provide a copy of this license with the original work, just to make sure everyone's as cool as you.
 
@@ -25,8 +25,8 @@ You are expressly prohibited from making or trying to make money from the code, 
 
 This license specifically prohibits you from using AdF.ly or AdF.ly clones (any "click past an ad before you can download" service) to make money or attempt to make money for clicks or downloads.
 
-Specific exceptions to the non-commercial nature of this license are granted to any derivitive works of art. Here's some specific exemptions:
-* If you make a cool tee-shirt design based off the code and want to sell that, it's completely ok. 
+Specific exceptions to the non-commercial nature of this license are granted to any derivative works of art. Here's some specific exemptions:
+* If you make a cool tee-shirt design based off the code and want to sell that, it's completely okay.
 * Want to use the the code or compiled binaries as part of a charity event? Go ahead. 
 * Make money from Let's Play videos or other "commentary" type uses, eg reviews or how-to videos/tutorials? No problem.
 
