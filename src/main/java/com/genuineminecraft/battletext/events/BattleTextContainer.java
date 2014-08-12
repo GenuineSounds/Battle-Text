@@ -57,6 +57,7 @@ public class BattleTextContainer {
 			this.time = tick;
 			textList.removeAll(removalQueue);
 			removalQueue.clear();
+			Collections.sort(textList);
 		}
 		renderText(deltaTime);
 	}
@@ -69,7 +70,7 @@ public class BattleTextContainer {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		for (Text txt : textList) {
-			if (txt.getDistanceToEntity(Minecraft.getMinecraft().thePlayer) > 32)
+			if (txt.getDistanceTo(Minecraft.getMinecraft().thePlayer) > 32)
 				continue;
 			double x = RenderManager.instance.viewerPosX - (txt.prevPosX + ((txt.posX - txt.prevPosX) * delta));
 			double y = RenderManager.instance.viewerPosY - (txt.prevPosY + ((txt.posY - txt.prevPosY) * delta)) - 2;
@@ -77,17 +78,15 @@ public class BattleTextContainer {
 			glTranslated(-x, -y, -z);
 			glRotatef(-RenderManager.instance.playerViewY + 180, 0.0F, 1.0F, 0.0F);
 			glRotatef(-RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
-			int alpha1 = (int) (txt.getInterpPercent(delta) * 0xFF) & 0xFF;
-			int alpha2 = (int) (txt.getInterpPercent(delta) * 0x7F) & 0xFF;
-			if (alpha1 < 28)
-				alpha1 = 28;
-			if (alpha2 < 28)
-				alpha2 = 28;
-			int color1 = txt.textColor | (alpha1 << 24);
-			int color2 = txt.backgroundColor | (alpha2 << 24);
+			int alpha = (int) (txt.getPercent() * 0xFF) & 0xFF;
+			if (alpha < 5)
+				alpha = 5;
+			int color1 = txt.textColor | (alpha << 24);
+			int color2 = txt.backgroundColor | (alpha << 24);
 			int offX = -fr.getStringWidth(txt.display);
 			int offY = -4;
-			double scale = 0.025;
+			double scale = 0.0175;
+			scale *= txt.getScale();
 			glScaled(scale, -scale, scale);
 			// Shadows
 			fr.drawString(txt.display, offX + 1, offY, color2);

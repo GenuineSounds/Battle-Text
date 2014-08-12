@@ -2,14 +2,14 @@ package com.genuineminecraft.battletext.core;
 
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
-public class Text {
+public class Text implements Comparable<Text> {
 
 	public static final double GRAVITY = 1;
-
 	public String display;
 	public final float amount;
 	public int textColor;
@@ -57,6 +57,7 @@ public class Text {
 		prevPosY = entity.prevPosY;
 		prevPosZ = entity.prevPosZ;
 		motionX = new Random().nextGaussian() / 24;
+		motionY = new Random().nextGaussian() / 32;
 		motionZ = new Random().nextGaussian() / 24;
 	}
 
@@ -72,11 +73,16 @@ public class Text {
 		prevPosY = posY;
 		prevPosZ = posZ;
 		motionX *= 0.95;
-		motionY -= GRAVITY * 0.01;
+		motionY -= GRAVITY / 100;
 		motionZ *= 0.95;
 		posX += motionX;
 		posY += motionY;
 		posZ += motionZ;
+	}
+
+	public float getScale() {
+		float out = amount / 100;
+		return 1 + out;
 	}
 
 	public double getPercent() {
@@ -91,8 +97,12 @@ public class Text {
 		return this.getPreviousPercent() + ((this.getPercent() - this.getPreviousPercent()) * delta);
 	}
 
-	public double getDistanceToEntity(Entity entity) {
+	public double getDistanceTo(Entity entity) {
 		return getDistanceTo(entity.posX, entity.posY, entity.posZ);
+	}
+
+	public double getDistanceTo(Text text) {
+		return getDistanceTo(text.posX, text.posY, text.posZ);
 	}
 
 	public double getDistanceTo(double posX, double posY, double posZ) {
@@ -100,5 +110,19 @@ public class Text {
 		double distanceY = this.posY - posY;
 		double distanceZ = this.posZ - posZ;
 		return Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+	}
+
+	@Override
+	public int compareTo(Text text) {
+		if (Minecraft.getMinecraft().thePlayer == null)
+			return 0;
+		double distance1 = this.getDistanceTo(Minecraft.getMinecraft().thePlayer);
+		double distance2 = text.getDistanceTo(Minecraft.getMinecraft().thePlayer);
+		if (distance1 == distance2)
+			return 0;
+		else if (distance2 > distance1)
+			return 1;
+		else
+			return -1;
 	}
 }

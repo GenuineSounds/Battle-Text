@@ -20,7 +20,7 @@ public class Events {
 	@SubscribeEvent
 	public void entityHurt(LivingHurtEvent event) {
 		if (Loader.isModLoaded("ClosedCaptions") && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
-			String name = "world";
+			String name = "World";
 			if (event.source instanceof EntityDamageSource) {
 				EntityDamageSource nds = (EntityDamageSource) event.source;
 				Entity src = null;
