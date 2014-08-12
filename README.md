@@ -3,6 +3,10 @@ BattleText
 
 [Genuine] Battle Text is a mod for Minecraf that adds floating combat damage as 3D graphical effects.
 
+License
+=======
+This computer software code ("the code") is ©2014 GenuineSounds ("the author") all rights reserved, and is licensed for use and redistribution under the “Don’t Be a Jerk” non-commercial care-free license.
+
 Don't Be a Jerk
 ===============
 
