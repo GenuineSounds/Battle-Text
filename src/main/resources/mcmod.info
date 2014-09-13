@@ -3,7 +3,7 @@
   "modid" : "BattleText",
   "name" : "[Genuine] Battle Text",
   "description": "[Genuine] Battle Text displays damage and healing as floating combat text.",
-  "version" : "1.6",
+  "version" : "1.7.10-r1",
   "mcversion": "1.7.10",
   "url" : "",
   "updateUrl" : "",
