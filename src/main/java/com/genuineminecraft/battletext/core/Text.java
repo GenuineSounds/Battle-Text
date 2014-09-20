@@ -5,11 +5,14 @@ import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 
 public class Text implements Comparable<Text> {
 
-	public static final double GRAVITY = 1;
+	public static final double GRAVITY = 0.5;
 	public String display;
 	public final float amount;
 	public int textColor;
@@ -28,7 +31,7 @@ public class Text implements Comparable<Text> {
 
 	public Text(EntityLivingBase entity, DamageSource damageSource, float damage) {
 		setupPos(entity);
-		String name = damageSource.getDamageType();
+		String name = damageSource.damageType;
 		setAmount("-", damage, name, false);
 		this.amount = damage;
 	}

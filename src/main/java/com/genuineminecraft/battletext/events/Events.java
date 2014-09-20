@@ -1,6 +1,7 @@
 package com.genuineminecraft.battletext.events;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntityDamageSource;
@@ -20,7 +21,7 @@ public class Events {
 	@SubscribeEvent
 	public void entityHurt(LivingHurtEvent event) {
 		if (Loader.isModLoaded("ClosedCaptions") && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
-			String name = "World";
+			String name = "";
 			if (event.source instanceof EntityDamageSource) {
 				EntityDamageSource nds = (EntityDamageSource) event.source;
 				Entity src = null;
@@ -33,15 +34,21 @@ public class Events {
 				else
 					name = src.getCommandSenderName();
 			}
+			String[] tmps = event.source.getDamageType().split("\\.");
+			String out = "";
+			for (String string : tmps)
+				out += cap(string);
+			out = I18n.format(out.replaceAll("[A-Z]", " $0").trim());
+			if (name.isEmpty())
+				name = out;
+			else
+				name = ChatFormatting.BLUE + name + ChatFormatting.RESET + " -> " + out;
 			StringBuilder message = new StringBuilder();
-			message.append("Damage: ");
-			message.append(ChatFormatting.DARK_RED);
-			message.append("-");
-			message.append((int) event.ammount);
-			message.append(" ");
-			message.append(ChatFormatting.RESET);
-			message.append("from ");
 			message.append(name);
+			message.append(": ");
+			message.append(ChatFormatting.DARK_RED);
+			message.append((int) event.ammount);
+			message.append(ChatFormatting.RESET);
 			FMLInterModComms.sendMessage("ClosedCaptions", "message", message.toString());
 			return;
 		}
@@ -49,16 +56,19 @@ public class Events {
 		BattleTextContainer.getInstance().addText(fx);
 	}
 
+	public static String cap(String in) {
+		return in.substring(0, 1).toUpperCase() + in.substring(1);
+	}
+
 	@SubscribeEvent
 	public void entityHeal(LivingHealEvent event) {
 		if (Loader.isModLoaded("ClosedCaptions") && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
 			String amount = Integer.toString((int) event.amount);
 			StringBuilder message = new StringBuilder();
-			message.append("Heal: ");
+			message.append("Healing: ");
 			message.append(ChatFormatting.GREEN.toString());
 			message.append(amount);
 			message.append(ChatFormatting.RESET.toString());
-			message.append(" hp");
 			FMLInterModComms.sendMessage("ClosedCaptions", "message", message.toString());
 			return;
 		}
