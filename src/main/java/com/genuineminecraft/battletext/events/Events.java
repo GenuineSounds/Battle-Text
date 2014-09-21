@@ -20,7 +20,7 @@ public class Events {
 
 	@SubscribeEvent
 	public void entityHurt(LivingHurtEvent event) {
-		if (Loader.isModLoaded("ClosedCaptions") && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+		if (Loader.isModLoaded("GenuineClosedCaptions") && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
 			String name = "";
 			if (event.source instanceof EntityDamageSource) {
 				EntityDamageSource nds = (EntityDamageSource) event.source;
@@ -49,7 +49,7 @@ public class Events {
 			message.append(ChatFormatting.DARK_RED);
 			message.append((int) event.ammount);
 			message.append(ChatFormatting.RESET);
-			FMLInterModComms.sendMessage("ClosedCaptions", "message", message.toString());
+			FMLInterModComms.sendMessage("GenuineClosedCaptions", "message", message.toString());
 			return;
 		}
 		Text fx = new Text(event.entityLiving, event.source, event.ammount);
@@ -62,14 +62,14 @@ public class Events {
 
 	@SubscribeEvent
 	public void entityHeal(LivingHealEvent event) {
-		if (Loader.isModLoaded("ClosedCaptions") && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+		if (Loader.isModLoaded("GenuineClosedCaptions") && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
 			String amount = Integer.toString((int) event.amount);
 			StringBuilder message = new StringBuilder();
 			message.append("Healing: ");
 			message.append(ChatFormatting.GREEN.toString());
 			message.append(amount);
 			message.append(ChatFormatting.RESET.toString());
-			FMLInterModComms.sendMessage("ClosedCaptions", "message", message.toString());
+			FMLInterModComms.sendMessage("GenuineClosedCaptions", "message", message.toString());
 			return;
 		}
 		Text fx = new Text(event.entityLiving, event.amount);
