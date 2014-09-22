@@ -1,6 +1,6 @@
 [
 {
-  "modid" : "GenuineBattleText",
+  "modid" : "BattleText",
   "name" : "Battle Text",
   "description": "Battle Text displays damage and healing as floating combat text.",
   "version" : "1.7.10-r2",
