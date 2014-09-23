@@ -75,16 +75,14 @@ public class BattleText {
 				if (values.length > 1) {
 					try {
 						Colors.setTextColor(values[0], Integer.decode(values[1]));
-					}
-					catch (Exception e) {
+					} catch (Exception e) {
 						Colors.setTextColor(values[0], 0xFFFFFF);
 					}
 				} else if (values.length > 0)
 					Colors.setTextColor(values[0], 0xFFFFFF);
 			}
 			br.close();
-		}
-		catch (Exception e) {}
+		} catch (Exception e) {}
 	}
 
 	public void saveColors() {
@@ -104,7 +102,6 @@ public class BattleText {
 				bw.newLine();
 			}
 			bw.close();
-		}
-		catch (Exception e) {}
+		} catch (Exception e) {}
 	}
 }
