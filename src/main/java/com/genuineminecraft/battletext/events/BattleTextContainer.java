@@ -37,8 +37,7 @@ public class BattleTextContainer {
 	public long time = 0L;
 	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
-	public BattleTextContainer() {
-	}
+	public BattleTextContainer() {}
 
 	public synchronized void addText(Text txt) {
 		if (txt.amount >= 0)
