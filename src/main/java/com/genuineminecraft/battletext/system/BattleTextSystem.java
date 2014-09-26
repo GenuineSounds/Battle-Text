@@ -1,4 +1,4 @@
-package com.genuineminecraft.battletext.events;
+package com.genuineminecraft.battletext.system;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
@@ -21,23 +21,101 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
-import com.genuineminecraft.battletext.core.Text;
+import com.genuineminecraft.battletext.hooks.LivingHealEvent;
+import com.mojang.realmsclient.gui.ChatFormatting;
 
-public class BattleTextContainer {
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-	private static BattleTextContainer instance;
+public class BattleTextSystem {
 
-	public static BattleTextContainer getInstance() {
+	public static final String CC_MOD_NAME = "ClosedCaptions";
+	private static BattleTextSystem instance;
+
+	public static BattleTextSystem getInstance() {
 		if (instance == null)
-			instance = new BattleTextContainer();
+			instance = new BattleTextSystem();
 		return instance;
+	}
+
+	public static boolean ccIsLoaded() {
+		return Loader.isModLoaded(CC_MOD_NAME);
+	}
+
+	public static String cap(String in) {
+		return in.substring(0, 1).toUpperCase() + in.substring(1);
 	}
 
 	public long time = 0L;
 	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
-	public BattleTextContainer() {}
+	public BattleTextSystem() {}
+
+	@SubscribeEvent
+	public void render(RenderWorldLastEvent event) {
+		tick(event.partialTicks);
+	}
+
+	@SubscribeEvent
+	public void entityHurt(LivingHurtEvent event) {
+		if (ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+			String name = "";
+			if (event.source instanceof EntityDamageSource) {
+				EntityDamageSource nds = (EntityDamageSource) event.source;
+				Entity src = null;
+				if (nds instanceof EntityDamageSourceIndirect)
+					src = ((EntityDamageSourceIndirect) nds).getEntity();
+				else
+					src = nds.getSourceOfDamage();
+				if (src instanceof EntityPlayer)
+					name = ((EntityPlayer) src).getDisplayName();
+				else
+					name = src.getCommandSenderName();
+			}
+			String[] tmps = event.source.getDamageType().split("\\.");
+			String out = "";
+			for (String string : tmps)
+				out += cap(string);
+			out = I18n.format(out.replaceAll("[A-Z]", " $0").trim());
+			if (name.isEmpty())
+				name = out;
+			else
+				name = ChatFormatting.BLUE + name + ChatFormatting.RESET + " -> " + out;
+			StringBuilder message = new StringBuilder();
+			message.append(name);
+			message.append(": ");
+			message.append(ChatFormatting.DARK_RED);
+			message.append((int) event.ammount);
+			message.append(ChatFormatting.RESET);
+			FMLInterModComms.sendMessage(CC_MOD_NAME, "message", message.toString());
+			return;
+		}
+		addText(new Text(event.entityLiving, event.source, event.ammount));
+	}
+
+	@SubscribeEvent
+	public void entityHeal(LivingHealEvent event) {
+		if (ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+			String amount = Integer.toString((int) event.amount);
+			StringBuilder message = new StringBuilder();
+			message.append("Healing: ");
+			message.append(ChatFormatting.GREEN.toString());
+			message.append(amount);
+			message.append(ChatFormatting.RESET.toString());
+			FMLInterModComms.sendMessage(CC_MOD_NAME, "message", message.toString());
+			return;
+		}
+		addText(new Text(event.entityLiving, event.amount));
+	}
 
 	public synchronized void addText(Text txt) {
 		if (txt.amount >= 0)

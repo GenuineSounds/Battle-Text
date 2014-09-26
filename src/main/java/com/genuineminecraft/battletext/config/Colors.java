@@ -1,4 +1,4 @@
-package com.genuineminecraft.battletext.core;
+package com.genuineminecraft.battletext.config;
 
 import java.util.HashMap;
 import java.util.Map;

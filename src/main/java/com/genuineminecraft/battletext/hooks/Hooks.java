@@ -1,9 +1,7 @@
-package com.genuineminecraft.battletext;
+package com.genuineminecraft.battletext.hooks;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
-
-import com.genuineminecraft.battletext.events.LivingHealEvent;
 
 public class Hooks {
 

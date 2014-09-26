@@ -14,8 +14,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.world.WorldEvent;
 
-import com.genuineminecraft.battletext.core.Colors;
-import com.genuineminecraft.battletext.events.Events;
+import com.genuineminecraft.battletext.config.Colors;
+import com.genuineminecraft.battletext.system.BattleTextSystem;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -32,7 +32,7 @@ public class BattleText {
 	public static BattleText instance;
 	public static final String MODID = "BattleText";
 	public static final String NAME = "Battle Text";
-	public static final String VERSION = "1.7.10-r2";
+	public static final String VERSION = "1.7.10-r3";
 	public static File dir;
 	public static Configuration config;
 
@@ -43,8 +43,8 @@ public class BattleText {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(BattleTextSystem.getInstance());
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(new Events());
 	}
 
 	@EventHandler

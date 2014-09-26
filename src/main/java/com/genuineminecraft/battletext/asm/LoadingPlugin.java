@@ -48,7 +48,7 @@ public class LoadingPlugin implements IFMLLoadingPlugin {
 			md.authorList = Arrays.asList("GenuineSounds");
 			md.modId = "<BattleText ASM>";
 			md.name = md.description = "BattleText HealingCore";
-			md.version = "1.7.10-r1";
+			md.version = "1.7.10-r3";
 		}
 
 		@Override

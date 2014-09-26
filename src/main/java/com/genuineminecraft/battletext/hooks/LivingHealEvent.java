@@ -1,4 +1,4 @@
-package com.genuineminecraft.battletext.events;
+package com.genuineminecraft.battletext.hooks;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.event.entity.living.LivingEvent;

@@ -40,7 +40,7 @@ public class Transformer implements IClassTransformer {
 			targetMethodName = "heal";
 			targetClassName = "net/minecraft/entity/EntityLivingBase";
 		}
-		//set up ASM class manipulation stuff. Consult the ASM docs for details
+		// Set up ASM class manipulation stuff.
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader = new ClassReader(bytes);
 		classReader.accept(classNode, 0);
@@ -56,8 +56,8 @@ public class Transformer implements IClassTransformer {
 				inj.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				// 1: fload_1
 				inj.add(new VarInsnNode(Opcodes.FLOAD, 1));
-				// 2: invokestatic	#20  // Method com/genuineminecraft/battletext/Hooks.onLivingHeal:(Lnet/minecraft/entity/EntityLivingBase;F)F
-				inj.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/genuineminecraft/battletext/Hooks", "onLivingHeal", "(L" + targetClassName + ";F)F"));
+				// 2: invokestatic	#20  // Method com/genuineminecraft/battletext/hooks/Hooks.onLivingHeal:(Lnet/minecraft/entity/EntityLivingBase;F)F
+				inj.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/genuineminecraft/battletext/hooks/Hooks", "onLivingHeal", "(L" + targetClassName + ";F)F", false));
 				// 5: fstore_1
 				inj.add(new VarInsnNode(Opcodes.FSTORE, 1));
 				// 6: fload_1
@@ -74,7 +74,7 @@ public class Transformer implements IClassTransformer {
 				// Add Label for if jump.
 				inj.add(node);
 				method.instructions.insert(inj);
-				System.out.println("LivingHealEvent Patched! Still waiting for this to become a forge standard.");
+				System.out.println("BattleText: LivingHealEvent Patched! Still waiting for this Event to become standard in Forge.");
 				break;
 			}
 		}

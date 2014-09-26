@@ -1,4 +1,4 @@
-package com.genuineminecraft.battletext.core;
+package com.genuineminecraft.battletext.system;
 
 import java.util.Random;
 
@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+
+import com.genuineminecraft.battletext.config.Colors;
 
 public class Text implements Comparable<Text> {
 
