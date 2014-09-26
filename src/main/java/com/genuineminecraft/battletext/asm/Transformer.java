@@ -22,18 +22,17 @@ public class Transformer implements IClassTransformer {
 
 	@Override
 	public byte[] transform(String name, String newName, byte[] bytecode) {
+		if (name.equals("sv"))
+			return patchClassASM(name, bytecode, true);
 		if (name.equals("net.minecraft.entity.EntityLivingBase"))
 			return patchClassASM(name, bytecode, false);
-		else if (name.equals("sv"))
-			return patchClassASM(name, bytecode, true);
-		else
-			return bytecode;
+		return bytecode;
 	}
 
 	public byte[] patchClassASM(String name, byte[] bytes, boolean obfuscated) {
 		String targetMethodName = "";
 		String targetClassName = "";
-		if (obfuscated == true) {
+		if (obfuscated) {
 			targetMethodName = "f";
 			targetClassName = "sv";
 		} else {
@@ -57,7 +56,7 @@ public class Transformer implements IClassTransformer {
 				// 1: fload_1
 				inj.add(new VarInsnNode(Opcodes.FLOAD, 1));
 				// 2: invokestatic	#20  // Method com/genuineminecraft/battletext/hooks/Hooks.onLivingHeal:(Lnet/minecraft/entity/EntityLivingBase;F)F
-				inj.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/genuineminecraft/battletext/hooks/Hooks", "onLivingHeal", "(L" + targetClassName + ";F)F", false));
+				inj.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/genuineminecraft/battletext/hooks/Hooks", "onLivingHeal", "(L" + targetClassName + ";F)F"));
 				// 5: fstore_1
 				inj.add(new VarInsnNode(Opcodes.FSTORE, 1));
 				// 6: fload_1
