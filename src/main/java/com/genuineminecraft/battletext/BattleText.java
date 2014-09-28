@@ -37,28 +37,9 @@ public class BattleText {
 	public static Configuration config;
 
 	@EventHandler
-	public void pre(FMLPreInitializationEvent event) {
-		dir = new File(event.getModConfigurationDirectory(), "BattleText");
-	}
-
-	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(BattleTextSystem.getInstance());
 		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@EventHandler
-	public void post(FMLPostInitializationEvent event) {
-		loadColors();
-		saveColors();
-		loadColors();
-	}
-
-	@SubscribeEvent
-	public void shutdown(WorldEvent.Save event) {
-		loadColors();
-		saveColors();
-		loadColors();
 	}
 
 	public void loadColors() {
@@ -85,6 +66,18 @@ public class BattleText {
 		} catch (Exception e) {}
 	}
 
+	@EventHandler
+	public void post(FMLPostInitializationEvent event) {
+		this.loadColors();
+		this.saveColors();
+		this.loadColors();
+	}
+
+	@EventHandler
+	public void pre(FMLPreInitializationEvent event) {
+		dir = new File(event.getModConfigurationDirectory(), "BattleText");
+	}
+
 	public void saveColors() {
 		try {
 			if (!dir.exists())
@@ -103,5 +96,12 @@ public class BattleText {
 			}
 			bw.close();
 		} catch (Exception e) {}
+	}
+
+	@SubscribeEvent
+	public void shutdown(WorldEvent.Save event) {
+		this.loadColors();
+		this.saveColors();
+		this.loadColors();
 	}
 }

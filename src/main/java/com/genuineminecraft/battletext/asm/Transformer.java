@@ -20,15 +20,6 @@ public class Transformer implements IClassTransformer {
 
 	public static int changeCount = 0;
 
-	@Override
-	public byte[] transform(String name, String newName, byte[] bytecode) {
-		if (name.equals("sv"))
-			return patchClassASM(name, bytecode, true);
-		if (name.equals("net.minecraft.entity.EntityLivingBase"))
-			return patchClassASM(name, bytecode, false);
-		return bytecode;
-	}
-
 	public byte[] patchClassASM(String name, byte[] bytes, boolean obfuscated) {
 		String targetMethodName = "";
 		String targetClassName = "";
@@ -81,5 +72,14 @@ public class Transformer implements IClassTransformer {
 		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		classNode.accept(writer);
 		return writer.toByteArray();
+	}
+
+	@Override
+	public byte[] transform(String name, String newName, byte[] bytecode) {
+		if (name.equals("sv"))
+			return this.patchClassASM(name, bytecode, true);
+		if (name.equals("net.minecraft.entity.EntityLivingBase"))
+			return this.patchClassASM(name, bytecode, false);
+		return bytecode;
 	}
 }

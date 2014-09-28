@@ -29,89 +29,16 @@ public class Text implements Comparable<Text> {
 	private double motionZ;
 
 	public Text(EntityLivingBase entity, DamageSource damageSource, float damage) {
-		setupPos(entity);
+		this.setupPos(entity);
 		String name = damageSource.damageType;
-		setAmount("-", damage, name, false);
+		this.setAmount("-", damage, name, false);
 		this.amount = damage;
 	}
 
 	public Text(EntityLivingBase entity, float healing) {
-		setupPos(entity);
-		setAmount("+", healing, "heal", false);
-		amount = healing;
-	}
-
-	public void setAmount(String prefix, float amount, String name, boolean flag) {
-		textColor = Colors.getTextColor(name) & 0xFFFFFF;
-		backgroundColor = Colors.getBackgroundColor(name) & 0xFFFFFF;
-		if (flag)
-			display = prefix + (int) amount + " (" + name + ")";
-		else
-			display = prefix + (int) amount;
-	}
-
-	private void setupPos(EntityLivingBase entity) {
-		ticks = lifetime;
-		posX = entity.posX;
-		posY = entity.posY;
-		posZ = entity.posZ;
-		prevPosX = entity.prevPosX;
-		prevPosY = entity.prevPosY;
-		prevPosZ = entity.prevPosZ;
-		motionX = new Random().nextGaussian() / 24;
-		motionY = new Random().nextGaussian() / 32;
-		motionZ = new Random().nextGaussian() / 24;
-	}
-
-	public boolean onUpdate() {
-		if (ticks-- <= 0)
-			return false;
-		move();
-		return true;
-	}
-
-	public void move() {
-		prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;
-		motionX *= 0.95;
-		motionY -= GRAVITY / 100;
-		motionZ *= 0.95;
-		posX += motionX;
-		posY += motionY;
-		posZ += motionZ;
-	}
-
-	public float getScale() {
-		float out = amount / 100;
-		return 1 + out;
-	}
-
-	public double getPercent() {
-		return (double) this.ticks / (double) this.lifetime;
-	}
-
-	public double getPreviousPercent() {
-		return (double) (this.ticks + 1) / (double) this.lifetime;
-	}
-
-	public double getInterpPercent(double delta) {
-		return this.getPreviousPercent() + ((this.getPercent() - this.getPreviousPercent()) * delta);
-	}
-
-	public double getDistanceTo(Entity entity) {
-		return getDistanceTo(entity.posX, entity.posY, entity.posZ);
-	}
-
-	public double getDistanceTo(Text text) {
-		return getDistanceTo(text.posX, text.posY, text.posZ);
-	}
-
-	public double getDistanceTo(double posX, double posY, double posZ) {
-		double distanceX = this.posX - posX;
-		double distanceY = this.posY - posY;
-		double distanceZ = this.posZ - posZ;
-		return Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+		this.setupPos(entity);
+		this.setAmount("+", healing, "heal", false);
+		this.amount = healing;
 	}
 
 	@Override
@@ -126,5 +53,78 @@ public class Text implements Comparable<Text> {
 			return 1;
 		else
 			return -1;
+	}
+
+	public double getDistanceTo(double posX, double posY, double posZ) {
+		double distanceX = this.posX - posX;
+		double distanceY = this.posY - posY;
+		double distanceZ = this.posZ - posZ;
+		return Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+	}
+
+	public double getDistanceTo(Entity entity) {
+		return this.getDistanceTo(entity.posX, entity.posY, entity.posZ);
+	}
+
+	public double getDistanceTo(Text text) {
+		return this.getDistanceTo(text.posX, text.posY, text.posZ);
+	}
+
+	public double getInterpPercent(double delta) {
+		return this.getPreviousPercent() + ((this.getPercent() - this.getPreviousPercent()) * delta);
+	}
+
+	public double getPercent() {
+		return (double) this.ticks / (double) this.lifetime;
+	}
+
+	public double getPreviousPercent() {
+		return (double) (this.ticks + 1) / (double) this.lifetime;
+	}
+
+	public float getScale() {
+		float out = this.amount / 100;
+		return 1 + out;
+	}
+
+	public void move() {
+		this.prevPosX = this.posX;
+		this.prevPosY = this.posY;
+		this.prevPosZ = this.posZ;
+		this.motionX *= 0.95;
+		this.motionY -= GRAVITY / 100;
+		this.motionZ *= 0.95;
+		this.posX += this.motionX;
+		this.posY += this.motionY;
+		this.posZ += this.motionZ;
+	}
+
+	public boolean onUpdate() {
+		if (this.ticks-- <= 0)
+			return false;
+		this.move();
+		return true;
+	}
+
+	public void setAmount(String prefix, float amount, String name, boolean flag) {
+		this.textColor = Colors.getTextColor(name) & 0xFFFFFF;
+		this.backgroundColor = Colors.getBackgroundColor(name) & 0xFFFFFF;
+		if (flag)
+			this.display = prefix + (int) amount + " (" + name + ")";
+		else
+			this.display = prefix + (int) amount;
+	}
+
+	private void setupPos(EntityLivingBase entity) {
+		this.ticks = this.lifetime;
+		this.posX = entity.posX;
+		this.posY = entity.posY;
+		this.posZ = entity.posZ;
+		this.prevPosX = entity.prevPosX;
+		this.prevPosY = entity.prevPosY;
+		this.prevPosZ = entity.prevPosZ;
+		this.motionX = new Random().nextGaussian() / 24;
+		this.motionY = new Random().nextGaussian() / 32;
+		this.motionZ = new Random().nextGaussian() / 24;
 	}
 }

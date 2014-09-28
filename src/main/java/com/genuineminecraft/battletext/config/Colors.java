@@ -5,8 +5,11 @@ import java.util.Map;
 
 public class Colors {
 
-	public static Map<String, Integer> textColors = new HashMap<String, Integer>();
-	public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
+	public static int getBackgroundColor(String name) {
+		if (!backgroundColors.containsKey(name))
+			backgroundColors.put(name, 0);
+		return backgroundColors.get(name);
+	}
 
 	public static int getTextColor(String name) {
 		if (!textColors.containsKey(name))
@@ -14,20 +17,16 @@ public class Colors {
 		return textColors.get(name);
 	}
 
-	public static int getBackgroundColor(String name) {
-		if (!backgroundColors.containsKey(name))
-			backgroundColors.put(name, 0);
-		return backgroundColors.get(name);
+	public static void setBackgroundColor(String name, int color) {
+		backgroundColors.put(name, color);
 	}
 
 	public static void setTextColor(String name, int color) {
 		textColors.put(name, color);
 	}
 
-	public static void setBackgroundColor(String name, int color) {
-		backgroundColors.put(name, color);
-	}
-
+	public static Map<String, Integer> textColors = new HashMap<String, Integer>();
+	public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
 	static {
 		textColors.put("arrow", 0xFE2712);
 		textColors.put("cactus", 0xFF5020);

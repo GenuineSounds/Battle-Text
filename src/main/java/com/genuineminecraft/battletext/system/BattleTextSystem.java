@@ -38,8 +38,13 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class BattleTextSystem {
 
-	public static final String CC_MOD_NAME = "ClosedCaptions";
-	private static BattleTextSystem instance;
+	public static String cap(String in) {
+		return in.substring(0, 1).toUpperCase() + in.substring(1);
+	}
+
+	public static boolean ccIsLoaded() {
+		return Loader.isModLoaded(CC_MOD_NAME);
+	}
 
 	public static BattleTextSystem getInstance() {
 		if (instance == null)
@@ -47,22 +52,31 @@ public class BattleTextSystem {
 		return instance;
 	}
 
-	public static boolean ccIsLoaded() {
-		return Loader.isModLoaded(CC_MOD_NAME);
-	}
-
-	public static String cap(String in) {
-		return in.substring(0, 1).toUpperCase() + in.substring(1);
-	}
-
+	public static final String CC_MOD_NAME = "ClosedCaptions";
+	private static BattleTextSystem instance;
 	public long time = 0L;
 	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
 	public BattleTextSystem() {}
 
+	public synchronized void addText(Text txt) {
+		if (txt.amount >= 0)
+			this.textList.add(txt);
+	}
+
 	@SubscribeEvent
-	public void render(RenderWorldLastEvent event) {
-		tick(event.partialTicks);
+	public void entityHeal(LivingHealEvent event) {
+		if (ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+			String amount = Integer.toString((int) event.amount);
+			StringBuilder message = new StringBuilder();
+			message.append("Healing: ");
+			message.append(ChatFormatting.GREEN.toString());
+			message.append(amount);
+			message.append(ChatFormatting.RESET.toString());
+			FMLInterModComms.sendMessage(CC_MOD_NAME, "message", message.toString());
+			return;
+		}
+		this.addText(new Text(event.entityLiving, event.amount));
 	}
 
 	@SubscribeEvent
@@ -99,44 +113,12 @@ public class BattleTextSystem {
 			FMLInterModComms.sendMessage(CC_MOD_NAME, "message", message.toString());
 			return;
 		}
-		addText(new Text(event.entityLiving, event.source, event.ammount));
+		this.addText(new Text(event.entityLiving, event.source, event.ammount));
 	}
 
 	@SubscribeEvent
-	public void entityHeal(LivingHealEvent event) {
-		if (ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
-			String amount = Integer.toString((int) event.amount);
-			StringBuilder message = new StringBuilder();
-			message.append("Healing: ");
-			message.append(ChatFormatting.GREEN.toString());
-			message.append(amount);
-			message.append(ChatFormatting.RESET.toString());
-			FMLInterModComms.sendMessage(CC_MOD_NAME, "message", message.toString());
-			return;
-		}
-		addText(new Text(event.entityLiving, event.amount));
-	}
-
-	public synchronized void addText(Text txt) {
-		if (txt.amount >= 0)
-			this.textList.add(txt);
-	}
-
-	public synchronized void tick(float deltaTime) {
-		if (RenderManager.instance == null || RenderManager.instance.worldObj == null)
-			return;
-		long tick = RenderManager.instance.worldObj.getTotalWorldTime();
-		if (this.time != tick) {
-			List<Text> removalQueue = new ArrayList<Text>();
-			for (Text caption : textList)
-				if (!caption.onUpdate())
-					removalQueue.add(caption);
-			this.time = tick;
-			textList.removeAll(removalQueue);
-			removalQueue.clear();
-			Collections.sort(textList);
-		}
-		renderText(deltaTime);
+	public void render(RenderWorldLastEvent event) {
+		this.tick(event.partialTicks);
 	}
 
 	public void renderText(float delta) {
@@ -146,7 +128,7 @@ public class BattleTextSystem {
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		for (Text txt : textList) {
+		for (Text txt : this.textList) {
 			if (txt.getDistanceTo(Minecraft.getMinecraft().thePlayer) > 32)
 				continue;
 			double x = RenderManager.instance.viewerPosX - (txt.prevPosX + ((txt.posX - txt.prevPosX) * delta));
@@ -181,5 +163,22 @@ public class BattleTextSystem {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHTING);
 		glPopMatrix();
+	}
+
+	public synchronized void tick(float deltaTime) {
+		if (RenderManager.instance == null || RenderManager.instance.worldObj == null)
+			return;
+		long tick = RenderManager.instance.worldObj.getTotalWorldTime();
+		if (this.time != tick) {
+			List<Text> removalQueue = new ArrayList<Text>();
+			for (Text caption : this.textList)
+				if (!caption.onUpdate())
+					removalQueue.add(caption);
+			this.time = tick;
+			this.textList.removeAll(removalQueue);
+			removalQueue.clear();
+			Collections.sort(this.textList);
+		}
+		this.renderText(deltaTime);
 	}
 }
