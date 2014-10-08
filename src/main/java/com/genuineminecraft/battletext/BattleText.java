@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.event.world.WorldEvent;
 
 import com.genuineminecraft.battletext.config.Colors;
 import com.genuineminecraft.battletext.system.BattleTextSystem;
@@ -23,7 +22,6 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(modid = BattleText.MODID, name = BattleText.NAME, version = BattleText.VERSION)
 public class BattleText {
@@ -56,14 +54,17 @@ public class BattleText {
 				if (values.length > 1) {
 					try {
 						Colors.setTextColor(values[0], Integer.decode(values[1]));
-					} catch (Exception e) {
-						Colors.setTextColor(values[0], 0xFFFFFF);
 					}
-				} else if (values.length > 0)
-					Colors.setTextColor(values[0], 0xFFFFFF);
+					catch (Exception e) {
+						Colors.setTextColor(values[0], Colors.DEFAULT_COLOR);
+					}
+				} else if (values.length > 0) {
+					Colors.setTextColor(values[0], Colors.DEFAULT_COLOR);
+				}
 			}
 			br.close();
-		} catch (Exception e) {}
+		}
+		catch (Exception e) {}
 	}
 
 	@EventHandler
@@ -90,18 +91,10 @@ public class BattleText {
 			for (Entry<String, Integer> entry : Colors.textColors.entrySet())
 				newList.add(entry.getKey() + "=0x" + Integer.toHexString(entry.getValue()).toUpperCase());
 			Collections.sort(newList);
-			for (String line : newList) {
-				bw.append(line);
-				bw.newLine();
-			}
+			for (String line : newList)
+				((BufferedWriter) bw.append(line)).newLine();
 			bw.close();
-		} catch (Exception e) {}
-	}
-
-	@SubscribeEvent
-	public void shutdown(WorldEvent.Save event) {
-		this.loadColors();
-		this.saveColors();
-		this.loadColors();
+		}
+		catch (Exception e) {}
 	}
 }

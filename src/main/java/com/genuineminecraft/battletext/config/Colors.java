@@ -5,6 +5,10 @@ import java.util.Map;
 
 public class Colors {
 
+	public static int DEFAULT_COLOR = 0xFF5020;
+	public static Map<String, Integer> textColors = new HashMap<String, Integer>();
+	public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
+
 	public static int getBackgroundColor(String name) {
 		if (!backgroundColors.containsKey(name))
 			backgroundColors.put(name, 0);
@@ -13,7 +17,7 @@ public class Colors {
 
 	public static int getTextColor(String name) {
 		if (!textColors.containsKey(name))
-			textColors.put(name, 0xFF5020);
+			textColors.put(name, DEFAULT_COLOR);
 		return textColors.get(name);
 	}
 
@@ -25,27 +29,25 @@ public class Colors {
 		textColors.put(name, color);
 	}
 
-	public static Map<String, Integer> textColors = new HashMap<String, Integer>();
-	public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
 	static {
 		textColors.put("arrow", 0xFE2712);
-		textColors.put("cactus", 0xFF5020);
-		textColors.put("drown", 0xFF5020);
+		textColors.put("cactus", DEFAULT_COLOR);
+		textColors.put("drown", DEFAULT_COLOR);
 		textColors.put("explosion", 0xFE2712);
 		textColors.put("explosion.player", 0xFE2712);
-		textColors.put("fall", 0xFF5020);
-		textColors.put("generic", 0xFF5020);
+		textColors.put("fall", DEFAULT_COLOR);
+		textColors.put("generic", DEFAULT_COLOR);
 		textColors.put("heal", 0x00A550);
 		textColors.put("inFire", 0xFF7F00);
-		textColors.put("inWall", 0xFF5020);
+		textColors.put("inWall", DEFAULT_COLOR);
 		textColors.put("indirectMagic", 0xA020F0);
 		textColors.put("lava", 0x4F0000);
 		textColors.put("magic", 0xA020F0);
-		textColors.put("mob", 0xFF5020);
+		textColors.put("mob", DEFAULT_COLOR);
 		textColors.put("onFire", 0xFF7F00);
 		textColors.put("outOfWorld", 0);
-		textColors.put("player", 0xFF5020);
-		textColors.put("thrown", 0xFF5020);
+		textColors.put("player", DEFAULT_COLOR);
+		textColors.put("thrown", DEFAULT_COLOR);
 		textColors.put("wither", 0x505050);
 		backgroundColors.put("ofOfWorld", -1);
 	}
