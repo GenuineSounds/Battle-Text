@@ -27,9 +27,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
-import com.genuineminecraft.battletext.hooks.LivingHealEvent;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.common.Loader;

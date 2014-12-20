@@ -13,8 +13,8 @@ import java.util.Map.Entry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
-import com.genuineminecraft.battletext.config.Colors;
 import com.genuineminecraft.battletext.system.BattleTextSystem;
+import com.genuineminecraft.battletext.system.Text;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -53,13 +53,13 @@ public class BattleText {
 				String[] values = line.split("=");
 				if (values.length > 1) {
 					try {
-						Colors.setTextColor(values[0], Integer.decode(values[1]));
+						Text.Colors.setTextColor(values[0], Integer.decode(values[1]));
 					}
 					catch (Exception e) {
-						Colors.setTextColor(values[0], Colors.DEFAULT_COLOR);
+						Text.Colors.setTextColor(values[0], Text.Colors.DEFAULT_COLOR);
 					}
 				} else if (values.length > 0) {
-					Colors.setTextColor(values[0], Colors.DEFAULT_COLOR);
+					Text.Colors.setTextColor(values[0], Text.Colors.DEFAULT_COLOR);
 				}
 			}
 			br.close();
@@ -88,7 +88,7 @@ public class BattleText {
 				file.createNewFile();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			List<String> newList = new ArrayList<String>();
-			for (Entry<String, Integer> entry : Colors.textColors.entrySet())
+			for (Entry<String, Integer> entry : Text.Colors.textColors.entrySet())
 				newList.add(entry.getKey() + "=0x" + Integer.toHexString(entry.getValue()).toUpperCase());
 			Collections.sort(newList);
 			for (String line : newList)
