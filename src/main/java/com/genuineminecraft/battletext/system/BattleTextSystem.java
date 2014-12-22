@@ -131,12 +131,12 @@ public class BattleTextSystem {
 		for (Text txt : this.textList) {
 			if (txt.getDistanceTo(Minecraft.getMinecraft().thePlayer) > 32)
 				continue;
-			double x = RenderManager.instance.viewerPosX - (txt.prevPosX + ((txt.posX - txt.prevPosX) * delta));
-			double y = RenderManager.instance.viewerPosY - (txt.prevPosY + ((txt.posY - txt.prevPosY) * delta)) - 2;
-			double z = RenderManager.instance.viewerPosZ - (txt.prevPosZ + ((txt.posZ - txt.prevPosZ) * delta));
+			double x = RenderManager.instance.renderPosX - (txt.prevPosX + ((txt.posX - txt.prevPosX) * delta));
+			double y = RenderManager.instance.renderPosY - (txt.prevPosY + ((txt.posY - txt.prevPosY) * delta)) - 2;
+			double z = RenderManager.instance.renderPosZ - (txt.prevPosZ + ((txt.posZ - txt.prevPosZ) * delta));
 			glTranslated(-x, -y, -z);
-			glRotatef(-RenderManager.instance.playerViewY + 180, 0.0F, 1.0F, 0.0F);
-			glRotatef(-RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
+			glRotatef(RenderManager.instance.playerViewY + 180, 0F, -1F, 0F);
+			glRotatef(RenderManager.instance.playerViewX, -1F, 0F, 0F);
 			int alpha = (int) (txt.getPercent() * 0xFF) & 0xFF;
 			if (alpha < 5)
 				alpha = 5;
@@ -155,8 +155,8 @@ public class BattleTextSystem {
 			// Main
 			fr.drawString(txt.display, offX, offY, color1);
 			glScaled(1.0 / scale, -1.0 / scale, 1.0 / scale);
-			glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
-			glRotatef(RenderManager.instance.playerViewY - 180, 0.0F, 1.0F, 0.0F);
+			glRotatef(RenderManager.instance.playerViewX, 1F, 0F, 0F);
+			glRotatef(RenderManager.instance.playerViewY - 180, 0F, 1F, 0F);
 			glTranslated(x, y, z);
 		}
 		glDisable(GL_BLEND);
