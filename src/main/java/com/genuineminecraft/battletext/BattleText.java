@@ -35,9 +35,40 @@ public class BattleText {
 	public static Configuration config;
 
 	@EventHandler
+	public void pre(FMLPreInitializationEvent event) {
+		dir = new File(event.getModConfigurationDirectory(), "BattleText");
+	}
+
+	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(BattleTextSystem.getInstance());
 		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@EventHandler
+	public void post(FMLPostInitializationEvent event) {
+		this.loadColors();
+		this.saveColors();
+		this.loadColors();
+	}
+
+	public void saveColors() {
+		try {
+			if (!dir.exists())
+				dir.mkdirs();
+			File file = new File(dir, "Colors.cfg");
+			if (!file.exists())
+				file.createNewFile();
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+			List<String> newList = new ArrayList<String>();
+			for (Entry<String, Integer> entry : Text.Colors.textColors.entrySet())
+				newList.add(entry.getKey() + "=0x" + Integer.toHexString(entry.getValue()).toUpperCase());
+			Collections.sort(newList);
+			for (String line : newList)
+				((BufferedWriter) bw.append(line)).newLine();
+			bw.close();
+		}
+		catch (Exception e) {}
 	}
 
 	public void loadColors() {
@@ -63,37 +94,6 @@ public class BattleText {
 				}
 			}
 			br.close();
-		}
-		catch (Exception e) {}
-	}
-
-	@EventHandler
-	public void post(FMLPostInitializationEvent event) {
-		this.loadColors();
-		this.saveColors();
-		this.loadColors();
-	}
-
-	@EventHandler
-	public void pre(FMLPreInitializationEvent event) {
-		dir = new File(event.getModConfigurationDirectory(), "BattleText");
-	}
-
-	public void saveColors() {
-		try {
-			if (!dir.exists())
-				dir.mkdirs();
-			File file = new File(dir, "Colors.cfg");
-			if (!file.exists())
-				file.createNewFile();
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-			List<String> newList = new ArrayList<String>();
-			for (Entry<String, Integer> entry : Text.Colors.textColors.entrySet())
-				newList.add(entry.getKey() + "=0x" + Integer.toHexString(entry.getValue()).toUpperCase());
-			Collections.sort(newList);
-			for (String line : newList)
-				((BufferedWriter) bw.append(line)).newLine();
-			bw.close();
 		}
 		catch (Exception e) {}
 	}
