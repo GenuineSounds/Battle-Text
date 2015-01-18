@@ -36,7 +36,7 @@ public class BattleText {
 
 	@EventHandler
 	public void pre(FMLPreInitializationEvent event) {
-		dir = new File(event.getModConfigurationDirectory(), "BattleText");
+		BattleText.dir = new File(event.getModConfigurationDirectory(), "BattleText");
 	}
 
 	@EventHandler
@@ -47,16 +47,16 @@ public class BattleText {
 
 	@EventHandler
 	public void post(FMLPostInitializationEvent event) {
-		this.loadColors();
-		this.saveColors();
-		this.loadColors();
+		loadColors();
+		saveColors();
+		loadColors();
 	}
 
 	public void saveColors() {
 		try {
-			if (!dir.exists())
-				dir.mkdirs();
-			File file = new File(dir, "Colors.cfg");
+			if (!BattleText.dir.exists())
+				BattleText.dir.mkdirs();
+			File file = new File(BattleText.dir, "Colors.cfg");
 			if (!file.exists())
 				file.createNewFile();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -72,26 +72,25 @@ public class BattleText {
 	}
 
 	public void loadColors() {
-		if (!dir.exists())
-			dir.mkdirs();
+		if (!BattleText.dir.exists())
+			BattleText.dir.mkdirs();
 		try {
-			File file = new File(dir, "Colors.cfg");
+			File file = new File(BattleText.dir, "Colors.cfg");
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line;
 			while ((line = br.readLine()) != null) {
 				if (line.isEmpty() || line.startsWith("#"))
 					continue;
 				String[] values = line.split("=");
-				if (values.length > 1) {
+				if (values.length > 1)
 					try {
 						Text.Colors.setTextColor(values[0], Integer.decode(values[1]));
 					}
 					catch (Exception e) {
 						Text.Colors.setTextColor(values[0], Text.Colors.DEFAULT_COLOR);
 					}
-				} else if (values.length > 0) {
+				else if (values.length > 0)
 					Text.Colors.setTextColor(values[0], Text.Colors.DEFAULT_COLOR);
-				}
 			}
 			br.close();
 		}

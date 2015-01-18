@@ -29,16 +29,16 @@ public class Text implements Comparable<Text> {
 	private double motionZ;
 
 	public Text(EntityLivingBase entity, DamageSource damageSource, float damage) {
-		this.setupPos(entity);
+		setupPos(entity);
 		String name = damageSource.damageType;
-		this.setAmount("-", damage, name, false);
-		this.amount = damage;
+		setAmount("-", damage, name, false);
+		amount = damage;
 	}
 
 	public Text(EntityLivingBase entity, float healing) {
-		this.setupPos(entity);
-		this.setAmount("+", healing, "heal", false);
-		this.amount = healing;
+		setupPos(entity);
+		setAmount("+", healing, "heal", false);
+		amount = healing;
 	}
 
 	@Override
@@ -71,61 +71,61 @@ public class Text implements Comparable<Text> {
 	}
 
 	public double getInterpPercent(double delta) {
-		return this.getPreviousPercent() + ((this.getPercent() - this.getPreviousPercent()) * delta);
+		return getPreviousPercent() + (getPercent() - getPreviousPercent()) * delta;
 	}
 
 	public double getPercent() {
-		return (double) this.ticks / (double) this.lifetime;
+		return (double) ticks / (double) lifetime;
 	}
 
 	public double getPreviousPercent() {
-		return (double) (this.ticks + 1) / (double) this.lifetime;
+		return (double) (ticks + 1) / (double) lifetime;
 	}
 
 	public float getScale() {
-		float out = this.amount / 100;
+		float out = amount / 100;
 		return 1 + out;
 	}
 
 	public void move() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		this.motionX *= 0.95;
-		this.motionY -= GRAVITY / 100;
-		this.motionZ *= 0.95;
-		this.posX += this.motionX;
-		this.posY += this.motionY;
-		this.posZ += this.motionZ;
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
+		motionX *= 0.95;
+		motionY -= Text.GRAVITY / 100;
+		motionZ *= 0.95;
+		posX += motionX;
+		posY += motionY;
+		posZ += motionZ;
 	}
 
 	public boolean onUpdate() {
-		if (this.ticks-- <= 0)
+		if (ticks-- <= 0)
 			return false;
-		this.move();
+		move();
 		return true;
 	}
 
 	public void setAmount(String prefix, float amount, String name, boolean flag) {
-		this.textColor = Colors.getTextColor(name) & 0xFFFFFF;
-		this.backgroundColor = Colors.getBackgroundColor(name) & 0xFFFFFF;
+		textColor = Colors.getTextColor(name) & 0xFFFFFF;
+		backgroundColor = Colors.getBackgroundColor(name) & 0xFFFFFF;
 		if (flag)
-			this.display = prefix + (int) amount + " (" + name + ")";
+			display = prefix + (int) amount + " (" + name + ")";
 		else
-			this.display = prefix + (int) amount;
+			display = prefix + (int) amount;
 	}
 
 	private void setupPos(EntityLivingBase entity) {
-		this.ticks = this.lifetime;
-		this.posX = entity.posX;
-		this.posY = entity.posY;
-		this.posZ = entity.posZ;
-		this.prevPosX = entity.prevPosX;
-		this.prevPosY = entity.prevPosY;
-		this.prevPosZ = entity.prevPosZ;
-		this.motionX = new Random().nextGaussian() / 24;
-		this.motionY = new Random().nextGaussian() / 32;
-		this.motionZ = new Random().nextGaussian() / 24;
+		ticks = lifetime;
+		posX = entity.posX;
+		posY = entity.posY;
+		posZ = entity.posZ;
+		prevPosX = entity.prevPosX;
+		prevPosY = entity.prevPosY;
+		prevPosZ = entity.prevPosZ;
+		motionX = new Random().nextGaussian() / 24;
+		motionY = new Random().nextGaussian() / 32;
+		motionZ = new Random().nextGaussian() / 24;
 	}
 
 	public static class Colors {
@@ -135,46 +135,46 @@ public class Text implements Comparable<Text> {
 		public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
 
 		public static int getBackgroundColor(String name) {
-			if (!backgroundColors.containsKey(name))
-				backgroundColors.put(name, 0);
-			return backgroundColors.get(name);
+			if (!Colors.backgroundColors.containsKey(name))
+				Colors.backgroundColors.put(name, 0);
+			return Colors.backgroundColors.get(name);
 		}
 
 		public static int getTextColor(String name) {
-			if (!textColors.containsKey(name))
-				textColors.put(name, DEFAULT_COLOR);
-			return textColors.get(name);
+			if (!Colors.textColors.containsKey(name))
+				Colors.textColors.put(name, Colors.DEFAULT_COLOR);
+			return Colors.textColors.get(name);
 		}
 
 		public static void setBackgroundColor(String name, int color) {
-			backgroundColors.put(name, color);
+			Colors.backgroundColors.put(name, color);
 		}
 
 		public static void setTextColor(String name, int color) {
-			textColors.put(name, color);
+			Colors.textColors.put(name, color);
 		}
 
 		static {
-			textColors.put("arrow", 0xFE2712);
-			textColors.put("cactus", DEFAULT_COLOR);
-			textColors.put("drown", DEFAULT_COLOR);
-			textColors.put("explosion", 0xFE2712);
-			textColors.put("explosion.player", 0xFE2712);
-			textColors.put("fall", DEFAULT_COLOR);
-			textColors.put("generic", DEFAULT_COLOR);
-			textColors.put("heal", 0x00A550);
-			textColors.put("inFire", 0xFF7F00);
-			textColors.put("inWall", DEFAULT_COLOR);
-			textColors.put("indirectMagic", 0xA020F0);
-			textColors.put("lava", 0x4F0000);
-			textColors.put("magic", 0xA020F0);
-			textColors.put("mob", DEFAULT_COLOR);
-			textColors.put("onFire", 0xFF7F00);
-			textColors.put("outOfWorld", 0);
-			textColors.put("player", DEFAULT_COLOR);
-			textColors.put("thrown", DEFAULT_COLOR);
-			textColors.put("wither", 0x505050);
-			backgroundColors.put("ofOfWorld", -1);
+			Colors.textColors.put("arrow", 0xFE2712);
+			Colors.textColors.put("cactus", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("drown", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("explosion", 0xFE2712);
+			Colors.textColors.put("explosion.player", 0xFE2712);
+			Colors.textColors.put("fall", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("generic", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("heal", 0x00A550);
+			Colors.textColors.put("inFire", 0xFF7F00);
+			Colors.textColors.put("inWall", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("indirectMagic", 0xA020F0);
+			Colors.textColors.put("lava", 0x4F0000);
+			Colors.textColors.put("magic", 0xA020F0);
+			Colors.textColors.put("mob", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("onFire", 0xFF7F00);
+			Colors.textColors.put("outOfWorld", 0);
+			Colors.textColors.put("player", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("thrown", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("wither", 0x505050);
+			Colors.backgroundColors.put("ofOfWorld", -1);
 		}
 	}
 }
