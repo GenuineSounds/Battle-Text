@@ -13,8 +13,8 @@ import java.util.Map.Entry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
-import com.genuineflix.bt.system.BattleTextSystem;
-import com.genuineflix.bt.system.Text;
+import com.genuineflix.bt.system.System;
+import com.genuineflix.bt.text.Text;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -42,8 +42,8 @@ public class BattleText {
 
 	@EventHandler
 	public void init(final FMLInitializationEvent event) {
-		FMLCommonHandler.instance().bus().register(BattleTextSystem.getInstance());
-		MinecraftForge.EVENT_BUS.register(BattleTextSystem.getInstance());
+		FMLCommonHandler.instance().bus().register(System.getInstance());
+		MinecraftForge.EVENT_BUS.register(System.getInstance());
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 

@@ -18,6 +18,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import org.lwjgl.opengl.GL11;
 
+import com.genuineflix.bt.text.Text;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.common.Loader;
@@ -26,36 +27,36 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
-public class BattleTextSystem {
+public class System {
 
 	public static final String CC_MOD_NAME = "ClosedCaption";
 	public static final String CC_DIRECT_MESSAGE_KEY = "[Direct]";
 
 	public static boolean ccIsLoaded() {
-		return Loader.isModLoaded(BattleTextSystem.CC_MOD_NAME);
+		return Loader.isModLoaded(System.CC_MOD_NAME);
 	}
 
-	public static BattleTextSystem getInstance() {
-		if (BattleTextSystem.instance == null)
-			BattleTextSystem.instance = new BattleTextSystem();
-		return BattleTextSystem.instance;
+	public static System getInstance() {
+		if (System.instance == null)
+			System.instance = new System();
+		return System.instance;
 	}
 
-	private static BattleTextSystem instance;
+	private static System instance;
 	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
-	public BattleTextSystem() {}
+	public System() {}
 
 	@SubscribeEvent
 	public void entityHeal(final LivingHealEvent event) {
-		if (BattleTextSystem.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
 			final String amount = Integer.toString((int) event.amount);
 			final StringBuilder message = new StringBuilder();
 			message.append("Healing: ");
 			message.append(ChatFormatting.GREEN.toString());
 			message.append(amount);
 			message.append(ChatFormatting.RESET.toString());
-			FMLInterModComms.sendMessage(BattleTextSystem.CC_MOD_NAME, BattleTextSystem.CC_DIRECT_MESSAGE_KEY, message.toString());
+			FMLInterModComms.sendMessage(System.CC_MOD_NAME, System.CC_DIRECT_MESSAGE_KEY, message.toString());
 			return;
 		} else if (event.amount >= 0)
 			textList.add(new Text(event.entityLiving, event.amount));
@@ -63,7 +64,7 @@ public class BattleTextSystem {
 
 	@SubscribeEvent
 	public void entityHurt(final LivingHurtEvent event) {
-		if (BattleTextSystem.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
 			String name = "";
 			if (event.source instanceof EntityDamageSource) {
 				final EntityDamageSource nds = (EntityDamageSource) event.source;
@@ -92,7 +93,7 @@ public class BattleTextSystem {
 			message.append(ChatFormatting.DARK_RED);
 			message.append((int) event.ammount);
 			message.append(ChatFormatting.RESET);
-			FMLInterModComms.sendMessage(BattleTextSystem.CC_MOD_NAME, BattleTextSystem.CC_DIRECT_MESSAGE_KEY, message.toString());
+			FMLInterModComms.sendMessage(System.CC_MOD_NAME, System.CC_DIRECT_MESSAGE_KEY, message.toString());
 			return;
 		}
 		if (event.ammount >= 0)
