@@ -1,4 +1,4 @@
-package com.genuineminecraft.battletext.system;
+package com.genuineflix.bt.system;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,25 +28,25 @@ public class Text implements Comparable<Text> {
 	private double motionY;
 	private double motionZ;
 
-	public Text(EntityLivingBase entity, DamageSource damageSource, float damage) {
+	public Text(final EntityLivingBase entity, final DamageSource damageSource, final float damage) {
 		setupPos(entity);
-		String name = damageSource.damageType;
+		final String name = damageSource.damageType;
 		setAmount("-", damage, name, false);
 		amount = damage;
 	}
 
-	public Text(EntityLivingBase entity, float healing) {
+	public Text(final EntityLivingBase entity, final float healing) {
 		setupPos(entity);
 		setAmount("+", healing, "heal", false);
 		amount = healing;
 	}
 
 	@Override
-	public int compareTo(Text text) {
+	public int compareTo(final Text text) {
 		if (Minecraft.getMinecraft().thePlayer == null)
 			return 0;
-		double distance1 = this.getDistanceTo(Minecraft.getMinecraft().thePlayer);
-		double distance2 = text.getDistanceTo(Minecraft.getMinecraft().thePlayer);
+		final double distance1 = this.getDistanceTo(Minecraft.getMinecraft().thePlayer);
+		final double distance2 = text.getDistanceTo(Minecraft.getMinecraft().thePlayer);
 		if (distance1 == distance2)
 			return 0;
 		else if (distance2 > distance1)
@@ -55,22 +55,22 @@ public class Text implements Comparable<Text> {
 			return -1;
 	}
 
-	public double getDistanceTo(double posX, double posY, double posZ) {
-		double distanceX = this.posX - posX;
-		double distanceY = this.posY - posY;
-		double distanceZ = this.posZ - posZ;
+	public double getDistanceTo(final double posX, final double posY, final double posZ) {
+		final double distanceX = this.posX - posX;
+		final double distanceY = this.posY - posY;
+		final double distanceZ = this.posZ - posZ;
 		return Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
 	}
 
-	public double getDistanceTo(Entity entity) {
+	public double getDistanceTo(final Entity entity) {
 		return this.getDistanceTo(entity.posX, entity.posY, entity.posZ);
 	}
 
-	public double getDistanceTo(Text text) {
+	public double getDistanceTo(final Text text) {
 		return this.getDistanceTo(text.posX, text.posY, text.posZ);
 	}
 
-	public double getInterpPercent(double delta) {
+	public double getInterpPercent(final double delta) {
 		return getPreviousPercent() + (getPercent() - getPreviousPercent()) * delta;
 	}
 
@@ -83,7 +83,7 @@ public class Text implements Comparable<Text> {
 	}
 
 	public float getScale() {
-		float out = amount / 100;
+		final float out = amount / 100;
 		return 1 + out;
 	}
 
@@ -106,7 +106,7 @@ public class Text implements Comparable<Text> {
 		return true;
 	}
 
-	public void setAmount(String prefix, float amount, String name, boolean flag) {
+	public void setAmount(final String prefix, final float amount, final String name, final boolean flag) {
 		textColor = Colors.getTextColor(name) & 0xFFFFFF;
 		backgroundColor = Colors.getBackgroundColor(name) & 0xFFFFFF;
 		if (flag)
@@ -115,7 +115,7 @@ public class Text implements Comparable<Text> {
 			display = prefix + (int) amount;
 	}
 
-	private void setupPos(EntityLivingBase entity) {
+	private void setupPos(final EntityLivingBase entity) {
 		ticks = lifetime;
 		posX = entity.posX;
 		posY = entity.posY;
@@ -134,23 +134,23 @@ public class Text implements Comparable<Text> {
 		public static Map<String, Integer> textColors = new HashMap<String, Integer>();
 		public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
 
-		public static int getBackgroundColor(String name) {
+		public static int getBackgroundColor(final String name) {
 			if (!Colors.backgroundColors.containsKey(name))
 				Colors.backgroundColors.put(name, 0);
 			return Colors.backgroundColors.get(name);
 		}
 
-		public static int getTextColor(String name) {
+		public static int getTextColor(final String name) {
 			if (!Colors.textColors.containsKey(name))
 				Colors.textColors.put(name, Colors.DEFAULT_COLOR);
 			return Colors.textColors.get(name);
 		}
 
-		public static void setBackgroundColor(String name, int color) {
+		public static void setBackgroundColor(final String name, final int color) {
 			Colors.backgroundColors.put(name, color);
 		}
 
-		public static void setTextColor(String name, int color) {
+		public static void setTextColor(final String name, final int color) {
 			Colors.textColors.put(name, color);
 		}
 

@@ -17,8 +17,8 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.0.5"
-group = "com.genuineminecraft.battletext"
+version = "1.7.10-1.0.8"
+group = "com.genuineflix.bt"
 archivesBaseName = "BattleText"
 
 minecraft {
