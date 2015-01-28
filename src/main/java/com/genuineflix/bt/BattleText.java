@@ -42,8 +42,8 @@ public class BattleText {
 
 	@EventHandler
 	public void init(final FMLInitializationEvent event) {
-		FMLCommonHandler.instance().bus().register(System.getInstance());
-		MinecraftForge.EVENT_BUS.register(System.getInstance());
+		FMLCommonHandler.instance().bus().register(System.instance);
+		MinecraftForge.EVENT_BUS.register(System.instance);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -88,9 +88,9 @@ public class BattleText {
 					try {
 						Text.Colors.setTextColor(values[0], Integer.decode(values[1]));
 					}
-				catch (final Exception e) {
-					Text.Colors.setTextColor(values[0], Text.Colors.DEFAULT_COLOR);
-				}
+					catch (final Exception e) {
+						Text.Colors.setTextColor(values[0], Text.Colors.DEFAULT_COLOR);
+					}
 				else if (values.length > 0)
 					Text.Colors.setTextColor(values[0], Text.Colors.DEFAULT_COLOR);
 			}

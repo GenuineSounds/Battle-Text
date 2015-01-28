@@ -36,19 +36,13 @@ public class System {
 		return Loader.isModLoaded(System.CC_MOD_NAME);
 	}
 
-	public static System getInstance() {
-		if (System.instance == null)
-			System.instance = new System();
-		return System.instance;
-	}
-
-	private static System instance;
+	public static final System instance = new System();
 	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
 	public System() {}
 
 	@SubscribeEvent
-	public void entityHeal(final LivingHealEvent event) {
+	public synchronized void entityHeal(final LivingHealEvent event) {
 		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
 			final String amount = Integer.toString((int) event.amount);
 			final StringBuilder message = new StringBuilder();
@@ -63,7 +57,7 @@ public class System {
 	}
 
 	@SubscribeEvent
-	public void entityHurt(final LivingHurtEvent event) {
+	public synchronized void entityHurt(final LivingHurtEvent event) {
 		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
 			String name = "";
 			if (event.source instanceof EntityDamageSource) {
@@ -101,7 +95,7 @@ public class System {
 	}
 
 	@SubscribeEvent
-	public void tick(final ClientTickEvent event) {
+	public synchronized void tick(final ClientTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
 		final Minecraft mc = Minecraft.getMinecraft();
@@ -117,7 +111,7 @@ public class System {
 	}
 
 	@SubscribeEvent
-	public void render(final RenderWorldLastEvent event) {
+	public synchronized void render(final RenderWorldLastEvent event) {
 		final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
