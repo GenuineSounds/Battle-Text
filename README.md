@@ -1,6 +1,6 @@
 BattleText
 ==========
-[Genuine] Battle Text is a mod for Minecraf that adds floating combat damage as 3D graphical effects.
+BattleText is a mod for Minecraft that adds floating combat damage as 3D graphical effects.
 
 License
 =======
