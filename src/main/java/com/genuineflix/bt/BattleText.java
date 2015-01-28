@@ -36,41 +36,10 @@ public class BattleText {
 	public static Configuration config;
 
 	@EventHandler
-	public void pre(final FMLPreInitializationEvent event) {
-		BattleText.dir = new File(event.getModConfigurationDirectory(), "BattleText");
-	}
-
-	@EventHandler
 	public void init(final FMLInitializationEvent event) {
 		FMLCommonHandler.instance().bus().register(System.instance);
 		MinecraftForge.EVENT_BUS.register(System.instance);
 		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@EventHandler
-	public void post(final FMLPostInitializationEvent event) {
-		loadColors();
-		saveColors();
-		loadColors();
-	}
-
-	public void saveColors() {
-		try {
-			if (!BattleText.dir.exists())
-				BattleText.dir.mkdirs();
-			final File file = new File(BattleText.dir, "Colors.cfg");
-			if (!file.exists())
-				file.createNewFile();
-			final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-			final List<String> newList = new ArrayList<String>();
-			for (final Entry<String, Integer> entry : Text.Colors.textColors.entrySet())
-				newList.add(entry.getKey() + "=0x" + Integer.toHexString(entry.getValue()).toUpperCase());
-			Collections.sort(newList);
-			for (final String line : newList)
-				((BufferedWriter) bw.append(line)).newLine();
-			bw.close();
-		}
-		catch (final Exception e) {}
 	}
 
 	public void loadColors() {
@@ -95,6 +64,37 @@ public class BattleText {
 					Text.Colors.setTextColor(values[0], Text.Colors.DEFAULT_COLOR);
 			}
 			br.close();
+		}
+		catch (final Exception e) {}
+	}
+
+	@EventHandler
+	public void post(final FMLPostInitializationEvent event) {
+		loadColors();
+		saveColors();
+		loadColors();
+	}
+
+	@EventHandler
+	public void pre(final FMLPreInitializationEvent event) {
+		BattleText.dir = new File(event.getModConfigurationDirectory(), "BattleText");
+	}
+
+	public void saveColors() {
+		try {
+			if (!BattleText.dir.exists())
+				BattleText.dir.mkdirs();
+			final File file = new File(BattleText.dir, "Colors.cfg");
+			if (!file.exists())
+				file.createNewFile();
+			final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+			final List<String> newList = new ArrayList<String>();
+			for (final Entry<String, Integer> entry : Text.Colors.textColors.entrySet())
+				newList.add(entry.getKey() + "=0x" + Integer.toHexString(entry.getValue()).toUpperCase());
+			Collections.sort(newList);
+			for (final String line : newList)
+				((BufferedWriter) bw.append(line)).newLine();
+			bw.close();
 		}
 		catch (final Exception e) {}
 	}

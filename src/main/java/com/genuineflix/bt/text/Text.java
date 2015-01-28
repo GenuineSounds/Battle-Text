@@ -11,6 +11,55 @@ import net.minecraft.util.DamageSource;
 
 public class Text implements Comparable<Text> {
 
+	public static class Colors {
+
+		public static int getBackgroundColor(final String name) {
+			if (!Colors.backgroundColors.containsKey(name))
+				Colors.backgroundColors.put(name, 0);
+			return Colors.backgroundColors.get(name);
+		}
+
+		public static int getTextColor(final String name) {
+			if (!Colors.textColors.containsKey(name))
+				Colors.textColors.put(name, Colors.DEFAULT_COLOR);
+			return Colors.textColors.get(name);
+		}
+
+		public static void setBackgroundColor(final String name, final int color) {
+			Colors.backgroundColors.put(name, color);
+		}
+
+		public static void setTextColor(final String name, final int color) {
+			Colors.textColors.put(name, color);
+		}
+
+		public static int DEFAULT_COLOR = 0xFF5020;
+		public static Map<String, Integer> textColors = new HashMap<String, Integer>();
+		public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
+		static {
+			Colors.textColors.put("arrow", 0xFE2712);
+			Colors.textColors.put("cactus", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("drown", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("explosion", 0xFE2712);
+			Colors.textColors.put("explosion.player", 0xFE2712);
+			Colors.textColors.put("fall", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("generic", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("heal", 0x00A550);
+			Colors.textColors.put("inFire", 0xFF7F00);
+			Colors.textColors.put("inWall", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("indirectMagic", 0xA020F0);
+			Colors.textColors.put("lava", 0x4F0000);
+			Colors.textColors.put("magic", 0xA020F0);
+			Colors.textColors.put("mob", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("onFire", 0xFF7F00);
+			Colors.textColors.put("outOfWorld", 0);
+			Colors.textColors.put("player", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("thrown", Colors.DEFAULT_COLOR);
+			Colors.textColors.put("wither", 0x505050);
+			Colors.backgroundColors.put("ofOfWorld", -1);
+		}
+	}
+
 	public static final double GRAVITY = 0.5;
 	public String display;
 	public final float amount;
@@ -126,55 +175,5 @@ public class Text implements Comparable<Text> {
 		motionX = new Random().nextGaussian() / 24;
 		motionY = new Random().nextGaussian() / 32;
 		motionZ = new Random().nextGaussian() / 24;
-	}
-
-	public static class Colors {
-
-		public static int DEFAULT_COLOR = 0xFF5020;
-		public static Map<String, Integer> textColors = new HashMap<String, Integer>();
-		public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
-
-		public static int getBackgroundColor(final String name) {
-			if (!Colors.backgroundColors.containsKey(name))
-				Colors.backgroundColors.put(name, 0);
-			return Colors.backgroundColors.get(name);
-		}
-
-		public static int getTextColor(final String name) {
-			if (!Colors.textColors.containsKey(name))
-				Colors.textColors.put(name, Colors.DEFAULT_COLOR);
-			return Colors.textColors.get(name);
-		}
-
-		public static void setBackgroundColor(final String name, final int color) {
-			Colors.backgroundColors.put(name, color);
-		}
-
-		public static void setTextColor(final String name, final int color) {
-			Colors.textColors.put(name, color);
-		}
-
-		static {
-			Colors.textColors.put("arrow", 0xFE2712);
-			Colors.textColors.put("cactus", Colors.DEFAULT_COLOR);
-			Colors.textColors.put("drown", Colors.DEFAULT_COLOR);
-			Colors.textColors.put("explosion", 0xFE2712);
-			Colors.textColors.put("explosion.player", 0xFE2712);
-			Colors.textColors.put("fall", Colors.DEFAULT_COLOR);
-			Colors.textColors.put("generic", Colors.DEFAULT_COLOR);
-			Colors.textColors.put("heal", 0x00A550);
-			Colors.textColors.put("inFire", 0xFF7F00);
-			Colors.textColors.put("inWall", Colors.DEFAULT_COLOR);
-			Colors.textColors.put("indirectMagic", 0xA020F0);
-			Colors.textColors.put("lava", 0x4F0000);
-			Colors.textColors.put("magic", 0xA020F0);
-			Colors.textColors.put("mob", Colors.DEFAULT_COLOR);
-			Colors.textColors.put("onFire", 0xFF7F00);
-			Colors.textColors.put("outOfWorld", 0);
-			Colors.textColors.put("player", Colors.DEFAULT_COLOR);
-			Colors.textColors.put("thrown", Colors.DEFAULT_COLOR);
-			Colors.textColors.put("wither", 0x505050);
-			Colors.backgroundColors.put("ofOfWorld", -1);
-		}
 	}
 }

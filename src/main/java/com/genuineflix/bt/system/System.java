@@ -29,13 +29,12 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
 public class System {
 
-	public static final String CC_MOD_NAME = "ClosedCaption";
-	public static final String CC_DIRECT_MESSAGE_KEY = "[Direct]";
-
 	public static boolean ccIsLoaded() {
 		return Loader.isModLoaded(System.CC_MOD_NAME);
 	}
 
+	public static final String CC_MOD_NAME = "ClosedCaption";
+	public static final String CC_DIRECT_MESSAGE_KEY = "[Direct]";
 	public static final System instance = new System();
 	public List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
@@ -95,22 +94,6 @@ public class System {
 	}
 
 	@SubscribeEvent
-	public synchronized void tick(final ClientTickEvent event) {
-		if (event.phase == Phase.START)
-			return;
-		final Minecraft mc = Minecraft.getMinecraft();
-		if (mc.thePlayer == null || mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame())
-			return;
-		final List<Text> removalQueue = new ArrayList<Text>();
-		for (final Text text : textList)
-			if (!text.onUpdate())
-				removalQueue.add(text);
-		textList.removeAll(removalQueue);
-		removalQueue.clear();
-		Collections.sort(textList);
-	}
-
-	@SubscribeEvent
 	public synchronized void render(final RenderWorldLastEvent event) {
 		final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 		GL11.glPushMatrix();
@@ -153,5 +136,21 @@ public class System {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
+	}
+
+	@SubscribeEvent
+	public synchronized void tick(final ClientTickEvent event) {
+		if (event.phase == Phase.START)
+			return;
+		final Minecraft mc = Minecraft.getMinecraft();
+		if (mc.thePlayer == null || mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame())
+			return;
+		final List<Text> removalQueue = new ArrayList<Text>();
+		for (final Text text : textList)
+			if (!text.onUpdate())
+				removalQueue.add(text);
+		textList.removeAll(removalQueue);
+		removalQueue.clear();
+		Collections.sort(textList);
 	}
 }
