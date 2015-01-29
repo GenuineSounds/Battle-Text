@@ -1,4 +1,4 @@
-package com.genuineflix.bt.system;
+package com.genuineflix.battle.system;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +18,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import org.lwjgl.opengl.GL11;
 
-import com.genuineflix.bt.text.Text;
+import com.genuineflix.battle.text.Text;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.common.Loader;

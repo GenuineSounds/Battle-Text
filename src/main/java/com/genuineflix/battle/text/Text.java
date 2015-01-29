@@ -1,4 +1,4 @@
-package com.genuineflix.bt.text;
+package com.genuineflix.battle.text;
 
 import java.util.HashMap;
 import java.util.Map;
