@@ -30,68 +30,19 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
 public class System {
 
-	public static boolean ccIsLoaded() {
+	private static boolean ccIsLoaded() {
 		return Loader.isModLoaded(System.CC_MOD_NAME);
 	}
 
-	public static final String CC_MOD_NAME = "ClosedCaption";
-	public static final String CC_DIRECT_MESSAGE_KEY = "[Direct]";
+	private static final String CC_MOD_NAME = "ClosedCaption";
+	private static final String CC_DIRECT_MESSAGE_KEY = "[Direct]";
 	public static final System instance = new System();
-	private List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
+	private final List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
 
-	public System() {}
+	private System() {}
 
-	@SubscribeEvent
-	public void entityHeal(final LivingHealEvent event) {
-		if (event.amount <= 0)
-			return;
-		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("type", "healing");
-			tag.setFloat("amount", event.amount);
-			FMLInterModComms.sendMessage(System.CC_MOD_NAME, System.CC_DIRECT_MESSAGE_KEY, tag);
-			return;
-		}
-		synchronized (textList) {
-			textList.add(new Text(event.entityLiving, event.amount));
-		}
-	}
-
-	@SubscribeEvent
-	public void entityHurt(final LivingHurtEvent event) {
-		if (event.ammount <= 0)
-			return;
-		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("type", "damage");
-			tag.setFloat("amount", event.ammount);
-			tag.setString("message", constructDamageMessage(event.source));
-			FMLInterModComms.sendMessage(System.CC_MOD_NAME, System.CC_DIRECT_MESSAGE_KEY, tag);
-			return;
-		}
-		synchronized (textList) {
-			textList.add(new Text(event.entityLiving, event.source, event.ammount));
-		}
-	}
-
-	private String constructDamageMessage(DamageSource source) {
-		StringBuilder message = beginDamageMessage(source);
-		message.append(constructDamageTypes(source));
-		message.append(": ");
-		message.append(ChatFormatting.DARK_RED);
-		return message.toString();
-	}
-
-	private String constructDamageTypes(DamageSource source) {
-		final String[] tmps = source.getDamageType().split("\\.");
-		StringBuilder sourceTypes = new StringBuilder();
-		for (final String string : tmps)
-			sourceTypes.append(string.substring(0, 1).toUpperCase() + string.substring(1));
-		return sourceTypes.toString().replaceAll("[A-Z]", " $0").trim();
-	}
-
-	private StringBuilder beginDamageMessage(DamageSource source) {
-		StringBuilder message = new StringBuilder();
+	private StringBuilder beginDamageMessage(final DamageSource source) {
+		final StringBuilder message = new StringBuilder();
 		if (!(source instanceof EntityDamageSource))
 			return message;
 		final EntityDamageSource nds = (EntityDamageSource) source;
@@ -107,13 +58,62 @@ public class System {
 		return message;
 	}
 
-	private String damageSourceName(String name) {
-		StringBuilder nameBuilder = new StringBuilder();
+	private String constructDamageMessage(final DamageSource source) {
+		final StringBuilder message = beginDamageMessage(source);
+		message.append(constructDamageTypes(source));
+		message.append(": ");
+		message.append(ChatFormatting.DARK_RED);
+		return message.toString();
+	}
+
+	private String constructDamageTypes(final DamageSource source) {
+		final String[] tmps = source.getDamageType().split("\\.");
+		final StringBuilder sourceTypes = new StringBuilder();
+		for (final String string : tmps)
+			sourceTypes.append(string.substring(0, 1).toUpperCase() + string.substring(1));
+		return sourceTypes.toString().replaceAll("[A-Z]", " $0").trim();
+	}
+
+	private String damageSourceName(final String name) {
+		final StringBuilder nameBuilder = new StringBuilder();
 		nameBuilder.append(ChatFormatting.BLUE);
 		nameBuilder.append(name);
 		nameBuilder.append(ChatFormatting.RESET);
 		nameBuilder.append(" -> ");
 		return nameBuilder.toString();
+	}
+
+	@SubscribeEvent
+	public void entityHeal(final LivingHealEvent event) {
+		if (event.amount <= 0)
+			return;
+		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+			final NBTTagCompound tag = new NBTTagCompound();
+			tag.setString("type", "healing");
+			tag.setFloat("amount", event.amount);
+			FMLInterModComms.sendMessage(System.CC_MOD_NAME, System.CC_DIRECT_MESSAGE_KEY, tag);
+			return;
+		}
+		synchronized (textList) {
+			textList.add(new Text(event.entityLiving, event.amount));
+		}
+	}
+
+	@SubscribeEvent
+	public void entityHurt(final LivingHurtEvent event) {
+		if (event.ammount <= 0)
+			return;
+		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+			final NBTTagCompound tag = new NBTTagCompound();
+			tag.setString("type", "damage");
+			tag.setFloat("amount", event.ammount);
+			tag.setString("message", constructDamageMessage(event.source));
+			FMLInterModComms.sendMessage(System.CC_MOD_NAME, System.CC_DIRECT_MESSAGE_KEY, tag);
+			return;
+		}
+		synchronized (textList) {
+			textList.add(new Text(event.entityLiving, event.source, event.ammount));
+		}
 	}
 
 	@SubscribeEvent
