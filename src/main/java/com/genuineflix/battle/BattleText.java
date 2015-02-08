@@ -36,10 +36,26 @@ public class BattleText {
 	public static Configuration config;
 
 	@EventHandler
+	public void pre(final FMLPreInitializationEvent event) {
+		BattleText.dir = new File(event.getModConfigurationDirectory(), "BattleText");
+		config = new Configuration(new File(dir, "Main.cfg"));
+		Text.gravity = config.getFloat("gravity", "", 0.5F, 0, 2, "This sets the gravity for the text.");
+		Text.sideVariance = config.getBoolean("sideVariance", "", true, "Allows the text to move randomly instead of just falling straight down.");
+		Text.fontScale = config.getFloat("fontScale", "", 1.0F, 0.25F, 10.0F, "Adjust the default text size.");
+	}
+
+	@EventHandler
 	public void init(final FMLInitializationEvent event) {
 		FMLCommonHandler.instance().bus().register(System.instance);
 		MinecraftForge.EVENT_BUS.register(System.instance);
 		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@EventHandler
+	public void post(final FMLPostInitializationEvent event) {
+		loadColors();
+		saveColors();
+		loadColors();
 	}
 
 	public void loadColors() {
@@ -66,18 +82,6 @@ public class BattleText {
 			br.close();
 		}
 		catch (final Exception e) {}
-	}
-
-	@EventHandler
-	public void post(final FMLPostInitializationEvent event) {
-		loadColors();
-		saveColors();
-		loadColors();
-	}
-
-	@EventHandler
-	public void pre(final FMLPreInitializationEvent event) {
-		BattleText.dir = new File(event.getModConfigurationDirectory(), "BattleText");
 	}
 
 	public void saveColors() {

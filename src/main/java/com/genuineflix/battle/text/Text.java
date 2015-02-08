@@ -60,7 +60,9 @@ public class Text implements Comparable<Text> {
 		}
 	}
 
-	public static final double GRAVITY = 0.5;
+	public static float gravity = 0.5F;
+	public static float fontScale = 1.0F;
+	public static boolean sideVariance = true;
 	public String display;
 	public final float amount;
 	public int textColor;
@@ -76,6 +78,7 @@ public class Text implements Comparable<Text> {
 	private double motionX;
 	private double motionY;
 	private double motionZ;
+	private final Random random = new Random();
 
 	public Text(final EntityLivingBase entity, final DamageSource damageSource, final float damage) {
 		setupPos(entity);
@@ -133,7 +136,7 @@ public class Text implements Comparable<Text> {
 
 	public float getScale() {
 		final float out = amount / 100;
-		return 1 + out;
+		return (1 + out) * fontScale;
 	}
 
 	public void move() {
@@ -141,7 +144,7 @@ public class Text implements Comparable<Text> {
 		prevPosY = posY;
 		prevPosZ = posZ;
 		motionX *= 0.95;
-		motionY -= Text.GRAVITY / 100;
+		motionY -= Text.gravity / 100;
 		motionZ *= 0.95;
 		posX += motionX;
 		posY += motionY;
@@ -172,8 +175,8 @@ public class Text implements Comparable<Text> {
 		prevPosX = entity.prevPosX;
 		prevPosY = entity.prevPosY;
 		prevPosZ = entity.prevPosZ;
-		motionX = new Random().nextGaussian() / 24;
-		motionY = new Random().nextGaussian() / 32;
-		motionZ = new Random().nextGaussian() / 24;
+		motionX = random.nextGaussian() / 24;
+		motionY = random.nextGaussian() / 32;
+		motionZ = random.nextGaussian() / 24;
 	}
 }
