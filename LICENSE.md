@@ -16,6 +16,7 @@ You're strictly prohibited from making money off the distribution of the mod:
 * No pay to download.
 * No click-through-ads to download.
 * No ads page that is required to be viewed to download.
+
 This does not include coincidental ads on the site that it is HOSTED.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
