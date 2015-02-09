@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,16 +16,14 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
-import org.lwjgl.opengl.GL11;
-
+import com.genuineflix.battle.render.Renderer;
 import com.genuineflix.battle.text.Text;
+import com.google.common.collect.ImmutableList;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
 public class System {
 
@@ -37,7 +34,10 @@ public class System {
 	private static final String CC_MOD_NAME = "ClosedCaption";
 	private static final String CC_DIRECT_MESSAGE_KEY = "[Direct]";
 	public static final System instance = new System();
-	private final List<Text> textList = Collections.synchronizedList(new ArrayList<Text>());
+	private final Renderer renderer = new Renderer();
+	private final List<Text> textList = new ArrayList<Text>();
+	private ImmutableList<Text> renderList;
+	private long tick;
 
 	private System() {}
 
@@ -117,67 +117,24 @@ public class System {
 	}
 
 	@SubscribeEvent
-	public void render(final RenderWorldLastEvent event) {
-		final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		synchronized (textList) {
-			for (final Text txt : textList) {
-				if (txt.getDistanceTo(Minecraft.getMinecraft().thePlayer) > 32)
-					continue;
-				final double x = RenderManager.renderPosX - (txt.prevPosX + (txt.posX - txt.prevPosX) * event.partialTicks);
-				final double y = RenderManager.renderPosY - (txt.prevPosY + (txt.posY - txt.prevPosY) * event.partialTicks) - 2;
-				final double z = RenderManager.renderPosZ - (txt.prevPosZ + (txt.posZ - txt.prevPosZ) * event.partialTicks);
-				GL11.glTranslated(-x, -y, -z);
-				GL11.glRotatef(RenderManager.instance.playerViewY + 180, 0F, -1F, 0F);
-				GL11.glRotatef(RenderManager.instance.playerViewX, -1F, 0F, 0F);
-				int alpha = (int) (txt.getPercent() * 0xFF) & 0xFF;
-				if (alpha < 5)
-					alpha = 5;
-				final int color1 = txt.textColor | alpha << 24;
-				final int color2 = txt.backgroundColor | alpha << 24;
-				final int offX = -fr.getStringWidth(txt.display);
-				final int offY = -4;
-				double scale = 0.0175;
-				scale *= txt.getScale();
-				GL11.glScaled(scale, -scale, scale);
-				// Shadows
-				fr.drawString(txt.display, offX + 1, offY, color2);
-				fr.drawString(txt.display, offX, offY + 1, color2);
-				fr.drawString(txt.display, offX, offY - 1, color2);
-				fr.drawString(txt.display, offX - 1, offY, color2);
-				// Main
-				fr.drawString(txt.display, offX, offY, color1);
-				GL11.glScaled(1.0 / scale, -1.0 / scale, 1.0 / scale);
-				GL11.glRotatef(RenderManager.instance.playerViewX, 1F, 0F, 0F);
-				GL11.glRotatef(RenderManager.instance.playerViewY - 180, 0F, 1F, 0F);
-				GL11.glTranslated(x, y, z);
-			}
-		}
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glPopMatrix();
+	public void renderWorldEvent(final RenderWorldLastEvent event) {
+		tick();
+		renderer.render(renderList, event.partialTicks);
 	}
 
-	@SubscribeEvent
-	public void tick(final ClientTickEvent event) {
-		if (event.phase == Phase.START)
+	public void tick() {
+		final long tick = RenderManager.instance.worldObj.getTotalWorldTime();
+		if (this.tick == tick)
 			return;
-		final Minecraft mc = Minecraft.getMinecraft();
-		if (mc.thePlayer == null || mc.currentScreen != null && mc.currentScreen.doesGuiPauseGame())
-			return;
-		final List<Text> removalQueue = new ArrayList<Text>();
+		this.tick = tick;
 		synchronized (textList) {
+			final List<Text> removalQueue = new ArrayList<Text>();
 			for (final Text text : textList)
 				if (!text.onUpdate())
 					removalQueue.add(text);
 			textList.removeAll(removalQueue);
 			Collections.sort(textList);
+			renderList = ImmutableList.copyOf(textList);
 		}
-		removalQueue.clear();
 	}
 }
