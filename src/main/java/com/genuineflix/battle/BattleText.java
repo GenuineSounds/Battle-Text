@@ -40,7 +40,8 @@ public class BattleText {
 		BattleText.dir = new File(event.getModConfigurationDirectory(), "BattleText");
 		config = new Configuration(new File(dir, "Main.cfg"));
 		Text.gravity = config.getFloat("gravity", "", 0.5F, 0, 2, "This sets the gravity for the text.");
-		Text.sideVariance = config.getBoolean("sideVariance", "", true, "Allows the text to move randomly instead of just falling straight down.");
+		Text.sideVariance = config.getBoolean("sideVariance", "", true,
+				"Allows the text to move randomly instead of just falling straight down.");
 		Text.fontScale = config.getFloat("fontScale", "", 1.0F, 0.25F, 10.0F, "Adjust the default text size.");
 	}
 
