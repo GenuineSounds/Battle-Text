@@ -36,6 +36,7 @@ public class Text implements Comparable<Text> {
 		public static int DEFAULT_COLOR = 0xFF5020;
 		public static Map<String, Integer> textColors = new HashMap<String, Integer>();
 		public static Map<String, Integer> backgroundColors = new HashMap<String, Integer>();
+
 		static {
 			Colors.textColors.put("arrow", 0xFE2712);
 			Colors.textColors.put("cactus", Colors.DEFAULT_COLOR);

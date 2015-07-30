@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.genuineflix.battle.render.Renderer;
+import com.genuineflix.battle.text.Text;
+import com.google.common.collect.ImmutableList;
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,15 +19,9 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-
-import com.genuineflix.battle.render.Renderer;
-import com.genuineflix.battle.text.Text;
-import com.google.common.collect.ImmutableList;
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class System {
 
@@ -52,9 +50,9 @@ public class System {
 		else
 			src = nds.getSourceOfDamage();
 		if (src instanceof EntityPlayer)
-			message.append(damageSourceName(((EntityPlayer) src).getDisplayName()));
+			message.append(damageSourceName(((EntityPlayer) src).getDisplayName().getFormattedText()));
 		else
-			message.append(damageSourceName(src.getCommandSenderName()));
+			message.append(damageSourceName(src.getCommandSenderEntity().getName()));
 		return message;
 	}
 
@@ -123,7 +121,7 @@ public class System {
 	}
 
 	public void tick() {
-		final long tick = RenderManager.instance.worldObj.getTotalWorldTime();
+		final long tick = Minecraft.getMinecraft().theWorld.getTotalWorldTime();
 		if (this.tick == tick)
 			return;
 		this.tick = tick;
