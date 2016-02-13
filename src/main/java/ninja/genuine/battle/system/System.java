@@ -32,7 +32,7 @@ public class System {
 	}
 
 	private static final String CC_MOD_NAME = "ClosedCaption";
-	private static final String CC_DIRECT_MESSAGE_KEY = "[Direct]";
+	private static final String CC_DIRECT_MESSAGE_KEY = "DirectMessage";
 	public static final System instance = new System();
 	private final Renderer renderer = new Renderer();
 	private final List<Text> textList = new ArrayList<Text>();
