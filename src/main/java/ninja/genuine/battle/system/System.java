@@ -4,26 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import ninja.genuine.battle.render.Renderer;
 import ninja.genuine.battle.text.Text;
-
-import com.google.common.collect.ImmutableList;
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class System {
 
@@ -46,15 +43,11 @@ public class System {
 		if (!(source instanceof EntityDamageSource))
 			return message;
 		final EntityDamageSource nds = (EntityDamageSource) source;
-		Entity src = null;
-		if (nds instanceof EntityDamageSourceIndirect)
-			src = ((EntityDamageSourceIndirect) nds).getEntity();
-		else
-			src = nds.getSourceOfDamage();
+		Entity src = nds.getTrueSource();
 		if (src instanceof EntityPlayer)
-			message.append(damageSourceName(((EntityPlayer) src).getDisplayName()));
+			message.append(damageSourceName(((EntityPlayer) src).getDisplayName().getFormattedText()));
 		else
-			message.append(damageSourceName(src.getCommandSenderName()));
+			message.append(damageSourceName(src.getCommandSenderEntity().getName()));
 		return message;
 	}
 
@@ -85,45 +78,45 @@ public class System {
 
 	@SubscribeEvent
 	public void entityHeal(final LivingHealEvent event) {
-		if (event.amount <= 0)
+		if (event.getAmount() <= 0)
 			return;
-		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+		if (System.ccIsLoaded() && event.getEntityLiving().equals(Minecraft.getMinecraft().player)) {
 			final NBTTagCompound tag = new NBTTagCompound();
 			tag.setString("type", "healing");
-			tag.setFloat("amount", event.amount);
+			tag.setFloat("amount", event.getAmount());
 			FMLInterModComms.sendMessage(System.CC_MOD_NAME, System.CC_DIRECT_MESSAGE_KEY, tag);
 			return;
 		}
 		synchronized (textList) {
-			textList.add(new Text(event.entityLiving, event.amount));
+			textList.add(new Text(event.getEntityLiving(), event.getAmount()));
 		}
 	}
 
 	@SubscribeEvent
 	public void entityHurt(final LivingHurtEvent event) {
-		if (event.ammount <= 0)
+		if (event.getAmount() <= 0)
 			return;
-		if (System.ccIsLoaded() && event.entityLiving.equals(Minecraft.getMinecraft().thePlayer)) {
+		if (System.ccIsLoaded() && event.getEntityLiving().equals(Minecraft.getMinecraft().player)) {
 			final NBTTagCompound tag = new NBTTagCompound();
 			tag.setString("type", "damage");
-			tag.setFloat("amount", event.ammount);
-			tag.setString("message", constructDamageMessage(event.source));
+			tag.setFloat("amount", event.getAmount());
+			tag.setString("message", constructDamageMessage(event.getSource()));
 			FMLInterModComms.sendMessage(System.CC_MOD_NAME, System.CC_DIRECT_MESSAGE_KEY, tag);
 			return;
 		}
 		synchronized (textList) {
-			textList.add(new Text(event.entityLiving, event.source, event.ammount));
+			textList.add(new Text(event.getEntityLiving(), event.getSource(), event.getAmount()));
 		}
 	}
 
 	@SubscribeEvent
 	public void renderWorldEvent(final RenderWorldLastEvent event) {
 		tick();
-		renderer.render(renderList, event.partialTicks);
+		renderer.render(renderList, event.getPartialTicks());
 	}
 
 	public void tick() {
-		final long tick = RenderManager.instance.worldObj.getTotalWorldTime();
+		final long tick = Minecraft.getMinecraft().getRenderManager().world.getTotalWorldTime();
 		if (this.tick == tick)
 			return;
 		this.tick = tick;

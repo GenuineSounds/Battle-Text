@@ -12,15 +12,14 @@ import java.util.Map.Entry;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import ninja.genuine.battle.system.System;
 import ninja.genuine.battle.text.Text;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = BattleText.MODID, name = BattleText.NAME, version = BattleText.VERSION)
 public class BattleText {
@@ -44,7 +43,6 @@ public class BattleText {
 
 	@EventHandler
 	public void init(final FMLInitializationEvent event) {
-		FMLCommonHandler.instance().bus().register(System.instance);
 		MinecraftForge.EVENT_BUS.register(System.instance);
 		MinecraftForge.EVENT_BUS.register(this);
 	}

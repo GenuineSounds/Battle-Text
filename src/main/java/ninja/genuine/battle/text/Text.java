@@ -96,10 +96,10 @@ public class Text implements Comparable<Text> {
 
 	@Override
 	public int compareTo(final Text text) {
-		if (Minecraft.getMinecraft().thePlayer == null)
+		if (Minecraft.getMinecraft().player == null)
 			return 0;
-		final double distance1 = this.getDistanceTo(Minecraft.getMinecraft().thePlayer);
-		final double distance2 = text.getDistanceTo(Minecraft.getMinecraft().thePlayer);
+		final double distance1 = this.getDistanceTo(Minecraft.getMinecraft().player);
+		final double distance2 = text.getDistanceTo(Minecraft.getMinecraft().player);
 		if (distance1 == distance2)
 			return 0;
 		else if (distance2 > distance1)
